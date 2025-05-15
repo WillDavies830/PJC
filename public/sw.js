@@ -1,4 +1,5 @@
-const CACHE_NAME = 'race-control-v1';
+const CACHE_VERSION = 'v3'; // Increment this whenever you make changes
+const CACHE_NAME = `race-control-${CACHE_VERSION}`;
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -26,8 +27,10 @@ self.addEventListener('activate', event => {
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.filter(cacheName => {
-          return cacheName !== CACHE_NAME;
+          return cacheName.startsWith('race-control-') && 
+                 cacheName !== CACHE_NAME;
         }).map(cacheName => {
+          console.log('Deleting outdated cache:', cacheName);
           return caches.delete(cacheName);
         })
       );
@@ -35,7 +38,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event - serve from cache, then network
+// Fetch event - network-first for JS/CSS/HTML, cache-first for other resources
 self.addEventListener('fetch', event => {
   // Skip cross-origin requests
   if (!event.request.url.startsWith(self.location.origin)) {
@@ -66,26 +69,39 @@ self.addEventListener('fetch', event => {
           );
         })
     );
-  } else {
-    // For page assets, try cache first, then network
+  } 
+  // For JavaScript, CSS, and HTML files, use network-first approach
+  else if (event.request.url.endsWith('.js') || 
+           event.request.url.endsWith('.css') || 
+           event.request.url.endsWith('.html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          // Update the cache with the new version
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          });
+          return response;
+        })
+        .catch(() => {
+          // Fall back to cache if offline
+          return caches.match(event.request);
+        })
+    );
+  } 
+  // For other resources, use cache-first strategy
+  else {
     event.respondWith(
       caches.match(event.request)
         .then(response => {
           return response || fetch(event.request)
             .then(fetchResponse => {
-              // Don't cache non-success responses
-              if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
-                return fetchResponse;
-              }
-              
-              // Clone the response since it can only be consumed once
+              // Cache other resources too
               const responseToCache = fetchResponse.clone();
-              
-              caches.open(CACHE_NAME)
-                .then(cache => {
-                  cache.put(event.request, responseToCache);
-                });
-                
+              caches.open(CACHE_NAME).then(cache => {
+                cache.put(event.request, responseToCache);
+              });
               return fetchResponse;
             });
         })
