@@ -33,15 +33,10 @@ const Templates = {
     if (results.length === 0) {
       return '<p>No results available for this race</p>';
     }
-    
-    // Simplified table with only position, bib number, and race time
     let html = `<table><thead><tr><th>Position</th><th>Bib Number</th><th>Finish Time</th></tr></thead><tbody>`;
     
     results.forEach((result, index) => {
-      // Format the race time with milliseconds using the provided formatting function
       const formattedRaceTime = formatTimeFn(result.raceTime);
-      
-      // Display bib number with emphasis
       const bibDisplay = `<strong>#${result.runnerNumber}</strong>`;
       
       html += `<tr><td>${index + 1}</td><td>${bibDisplay}</td><td>${formattedRaceTime}</td></tr>`;

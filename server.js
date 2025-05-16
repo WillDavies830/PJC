@@ -1,8 +1,14 @@
-const express = require('express');
-const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
+import express from 'express';
+import path from 'path';
+import sqlite3 from 'sqlite3';
+import { fileURLToPath } from 'url';
+
 const app = express();
 const PORT = 8080;
+
+// Get current filename and directory name
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Open database connection
 const db = new sqlite3.Database(path.join(__dirname, 'db', 'race-time.db'));
