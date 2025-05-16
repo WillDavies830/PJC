@@ -27,8 +27,6 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
-  padding: 0;
-  margin: 0;
 }
 
 header {
@@ -121,7 +119,7 @@ button:not(:disabled):hover {
 
 .danger-button {
   background-color: var(--danger-color);
-  color: var(--button-text);
+  color: white;
 }
 
 .danger-button:hover:not(:disabled) {
@@ -130,7 +128,7 @@ button:not(:disabled):hover {
 
 .export-button {
   background-color: var(--export-color);
-  color: var(--button-text);
+  color: white;
 }
 
 .export-button:hover:not(:disabled) {
@@ -199,8 +197,10 @@ input:disabled {
   font-size: 48px;
   font-weight: bold;
   text-align: center;
-  margin: 20px 0;
+  margin: 20px auto;
   font-family: monospace;
+  display: block;
+  width: 100%;
 }
 
 #timer-controls {
@@ -212,10 +212,10 @@ input:disabled {
 }
 
 .race-card {
-  background-color: var(--card-color);
-  border-radius: var(--border-radius);
-  padding: var(--spacing);
-  margin-bottom: var(--spacing);
+  background-color: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
   box-shadow: var(--box-shadow);
 }
 
@@ -242,7 +242,7 @@ input:disabled {
   overflow-y: auto;
   margin: 15px 0;
   border: 1px solid #ddd;
-  border-radius: var(--border-radius);
+  border-radius: 8px;
   padding: 10px;
 }
 
@@ -264,8 +264,8 @@ input:disabled {
 #runner-input {
   margin: 20px 0;
   padding: 15px;
-  background-color: var(--card-color);
-  border-radius: var(--border-radius);
+  background-color: white;
+  border-radius: 8px;
   box-shadow: var(--box-shadow);
 }
 
@@ -277,7 +277,7 @@ input:disabled {
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 12px 20px;
-  border-radius: var(--border-radius);
+  border-radius: 8px;
   z-index: 1000;
   transition: opacity 0.3s;
 }
@@ -295,8 +295,8 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
-  background-color: var(--card-color);
-  border-radius: var(--border-radius);
+  background-color: white;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: var(--box-shadow);
 }
@@ -329,7 +329,7 @@ tr:nth-child(even) {
   align-items: center;
   background-color: rgba(255, 255, 255, 0.2);
   padding: 5px 10px;
-  border-radius: var(--border-radius);
+  border-radius: 8px;
   z-index: 100;
 }
 
@@ -387,85 +387,4 @@ tr:nth-child(even) {
   .race-card-buttons button {
     flex: 1 1 100%;
   }
-}
-
-section, article, nav, aside, time {
-  display: block;
-}
-
-#timer-display, 
-time#timer-display {
-  font-size: 48px;
-  font-weight: bold;
-  text-align: center;
-  margin: 20px 0;
-  font-family: monospace;
-  display: block;
-}
-
-fieldset.form-group {
-  margin-bottom: 15px;
-  border: none;
-  padding: 0;
-}
-
-article#results-list {
-  max-height: 300px;
-  overflow-y: auto;
-  margin: 15px 0;
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  padding: 10px;
-}
-
-section#races-container article.race-card {
-  background-color: var(--card-color);
-  border-radius: var(--border-radius);
-  padding: var(--spacing);
-  margin-bottom: var(--spacing);
-  box-shadow: var(--box-shadow);
-}
-
-aside.role-selector {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  display: flex;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 5px 10px;
-  border-radius: var(--border-radius);
-  z-index: 100;
-}
-
-nav.button-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin: 20px 0;
-}
-
-aside#notification {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 12px 20px;
-  border-radius: var(--border-radius);
-  z-index: 1000;
-  transition: opacity 0.3s;
-}
-
-section#runner-input {
-  margin: 20px 0;
-  padding: 15px;
-  background-color: var(--card-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-}
-
-section#recorded-results h3 {
-  margin-top: 20px;
 }

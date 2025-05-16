@@ -23,7 +23,7 @@ This is a core feature of my application as it is necessary that users can creat
 
 
 ### Starting and ending a race.
-In my main application app.js on line 350 and 475 you will find my startRace() and endRace() functions. The user cannot start a race when offline as this would be overly complex so there is a check in place. However a user can end a race when offline, the timer is stopped only locally and the PUT request to the server is done once the user is back online. In both methods I use if() statements to disable and enable buttons for better usability and to prevent unwanted errors.
+In my main application app.js on line 350 and 475 you will find my startRace() and endRace() methods. The user cannot start a race when offline as this would be overly complex so there is a check in place. However a user can end a race when offline, the timer is stopped only locally and the PUT request to the server is done once the user is back online. In both methods I use if() statements to disable and enable buttons for better usability and to prevent unwanted errors.
 This is another core feature of my application as it is necessary for users to be able to start and end races on a timer app!
 
 
@@ -35,12 +35,24 @@ In my main application app.js on line 400 you will find my recordFinish() method
 In my main application app.js on line 508 you will find my uploadResults() method which again does checks first to see if the user is online before using POST to upload the results to the server, along with making sure there are results stored locally to upload. After uploading results successfully the 
 
 
+### Viewing available races.
+In my main application app.js on line 220 you will find my viewRaces() method which uses fetch() to retrieve available races from the server. I also use a check to see if the user is online before making the API call to the server. If the user is offline, it displays only races that are stored in local storage.
 
 
+### Viewing race results.
+In my main application app.js on line 604 you will find my loadRaceResults() method which fetches data from the server to display results for a specific race. This method makes two API calls, one to fetch the race details and another to fetch the race results. After retrieving the data, it displays the results in a table format with position, bib number and finish time. The method also includes error handling for offline scenarios and server errors.
 
 
+### Deleting a race.
+In my main application app.js on line 262 you will find my deleteRace() method which first checks if the user has the admin role, if so it asks for confirmation before making a DELETE request to the server. This method includes error checking to make sure the user is online before attempting to delete a race, and it also provides feedback to the user with a notification once the race is successfully deleted.
 
 
+### Exporting race results to a csv file.
+In my main application app.js on line 559 you will find my exportRaceResults() method which first downloads race and result data from the server, then formats this data into a CSV string. It creates a downloadable link element with the CSV data and automatically triggers the download for the user. The CSV includes position, bib number, and race time for each runner, sorted by finish time.
+
+
+### Admin and Runner roles.
+Throughout my application you will find role-based access control implemented in methods like initRoleBasedAccess() on line 98, isAdmin() on line 145, and showScreen() on line 150. The application allows users to switch between admin and runner roles, with the chosen role stored in localStorage. Depending on the role, certain UI elements (like the Create Race button) and functionality (like starting/ending races) are enabled or disabled. The app visually indicates the current role through CSS classes.
 
 
 
