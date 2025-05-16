@@ -10,15 +10,15 @@ class OfflineStorage {
       this.deviceId = this.generateDeviceId();
       localStorage.setItem('device-id', this.deviceId);
     }
-    
+
     // Initialize online/offline status
     this.isOnline = navigator.onLine;
     this.updateConnectionStatus();
-    
+
     // Set up event listeners
     window.addEventListener('online', () => this.handleConnectionChange(true));
     window.addEventListener('offline', () => this.handleConnectionChange(false));
-    
+
     // Check for any unsynchronized data on startup
     this.checkUnsyncedData();
   }
@@ -28,7 +28,7 @@ class OfflineStorage {
    * @returns {string} A unique device ID
    */
   generateDeviceId() {
-    return 'device_' + Math.random().toString(36).substring(2, 15) + 
+    return 'device_' + Math.random().toString(36).substring(2, 15) +
            Math.random().toString(36).substring(2, 15);
   }
 
@@ -48,7 +48,7 @@ class OfflineStorage {
     this.isOnline = isOnline;
     this.updateConnectionStatus();
     this.checkUnsyncedData();
-    
+
     if (isOnline) {
       // Show notification
       showNotification(isOnline ? 'You are back online' : 'You are offline', 3000);
@@ -71,18 +71,18 @@ class OfflineStorage {
   checkUnsyncedData() {
     const data = this.getStoredData();
     const hasUnsyncedData = data && data.results && data.results.length > 0;
-    
+
     if (this.syncStatusElement) {
       if (hasUnsyncedData && this.isOnline) {
         this.syncStatusElement.innerHTML = Templates.syncStatus(hasUnsyncedData, this.isOnline);
         this.syncStatusElement.classList.remove('hidden');
-        
+
         // The global event delegation will handle this button's clicks
       } else {
         this.syncStatusElement.classList.add('hidden');
       }
     }
-    
+
     return hasUnsyncedData;
   }
 
@@ -111,12 +111,12 @@ class OfflineStorage {
    */
   storeResult(result) {
     let data = this.getStoredData() || { raceId: result.raceId, results: [] };
-    
+
     // Make sure we're storing for the same race
     if (data.raceId !== result.raceId) {
       data = { raceId: result.raceId, results: [] };
     }
-    
+
     // Check for duplicate runner numbers
     const duplicateRunner = data.results.find(r => r.runnerNumber === result.runnerNumber);
     if (duplicateRunner) {
@@ -124,7 +124,7 @@ class OfflineStorage {
       // Don't add the duplicate - since we already check in the UI, this is just an extra safeguard
       return false;
     }
-    
+
     data.results.push(result);
     this.storeRaceData(data);
     return true;
@@ -155,27 +155,27 @@ class OfflineStorage {
       showNotification('Cannot sync while offline', 3000);
       return false;
     }
-    
+
     const data = this.getStoredData();
     if (!data || !data.results || data.results.length === 0) {
       showNotification('No data to synchronize', 3000);
       return false;
     }
-    
+
     try {
       const response = await fetch(`/api/races/${data.raceId}/results`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           results: data.results,
-          deviceId: this.deviceId
-        })
+          deviceId: this.deviceId,
+        }),
       });
-      
+
       const responseData = await response.json();
-      
+
       if (!response.ok) {
         // Handle duplicate runner numbers error specifically
         if (response.status === 400 && responseData.duplicates) {
@@ -183,10 +183,10 @@ class OfflineStorage {
           showNotification(`Cannot sync. Runner numbers already recorded: ${duplicateNumbers}`, 5000);
           return false;
         }
-        
+
         throw new Error(responseData.error || 'Failed to synchronize results');
       }
-      
+
       this.clearResults();
       showNotification('Results synchronized successfully', 3000);
       return true;
@@ -201,10 +201,10 @@ class OfflineStorage {
 function showNotification(message, duration = 3000) {
   const notification = document.querySelector('#notification');
   if (!notification) return;
-  
+
   notification.textContent = message; // Changed to textContent
   notification.classList.remove('hidden');
-  
+
   setTimeout(() => {
     notification.classList.add('hidden');
   }, duration);

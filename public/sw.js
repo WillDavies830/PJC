@@ -7,7 +7,7 @@ const ASSETS_TO_CACHE = [
   '/app.js',
   '/timer.js',
   '/offline.js',
-  '/manifest.json'
+  '/manifest.json',
 ];
 
 // Install event - cache assets
@@ -17,7 +17,7 @@ self.addEventListener('install', event => {
       .then(cache => {
         console.log('Caching app assets');
         return cache.addAll(ASSETS_TO_CACHE);
-      })
+      }),
   );
 });
 
@@ -27,14 +27,14 @@ self.addEventListener('activate', event => {
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.filter(cacheName => {
-          return cacheName.startsWith('race-control-') && 
+          return cacheName.startsWith('race-control-') &&
                  cacheName !== CACHE_NAME;
         }).map(cacheName => {
           console.log('Deleting outdated cache:', cacheName);
           return caches.delete(cacheName);
-        })
+        }),
       );
-    })
+    }),
   );
 });
 
@@ -44,7 +44,7 @@ self.addEventListener('fetch', event => {
   if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }
-  
+
   // For API requests, try network first, then fallback to offline handling
   if (event.request.url.includes('/api/')) {
     event.respondWith(
@@ -54,25 +54,25 @@ self.addEventListener('fetch', event => {
           if (event.request.method === 'GET') {
             return caches.match(event.request);
           }
-          
+
           // For other methods (POST, PUT), we can't really handle them offline
           // Just return a simple JSON indicating we're offline
           return new Response(
-            JSON.stringify({ 
+            JSON.stringify({
               error: 'You are currently offline',
-              offline: true 
+              offline: true,
             }),
-            { 
+            {
               status: 503,
-              headers: { 'Content-Type': 'application/json' }
-            }
+              headers: { 'Content-Type': 'application/json' },
+            },
           );
-        })
+        }),
     );
-  } 
+  }
   // For JavaScript, CSS, and HTML files, use network-first approach
-  else if (event.request.url.endsWith('.js') || 
-           event.request.url.endsWith('.css') || 
+  else if (event.request.url.endsWith('.js') ||
+           event.request.url.endsWith('.css') ||
            event.request.url.endsWith('.html')) {
     event.respondWith(
       fetch(event.request)
@@ -87,9 +87,9 @@ self.addEventListener('fetch', event => {
         .catch(() => {
           // Fall back to cache if offline
           return caches.match(event.request);
-        })
+        }),
     );
-  } 
+  }
   // For other resources, use cache-first strategy
   else {
     event.respondWith(
@@ -104,7 +104,7 @@ self.addEventListener('fetch', event => {
               });
               return fetchResponse;
             });
-        })
+        }),
     );
   }
 });

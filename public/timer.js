@@ -17,14 +17,14 @@ class RaceTimer {
    */
   start(startTime = null) {
     if (this.isRunning) return this.startTime;
-    
+
     this.startTime = startTime || Date.now();
     this.isRunning = true;
-    
+
     this.timerInterval = setInterval(() => {
       this.updateDisplay();
     }, 10); // Update every 10ms for smooth display including milliseconds
-    
+
     return this.startTime;
   }
 
@@ -33,7 +33,7 @@ class RaceTimer {
    */
   stop() {
     if (!this.isRunning) return;
-    
+
     clearInterval(this.timerInterval);
     this.isRunning = false;
   }
@@ -74,7 +74,7 @@ class RaceTimer {
       this.displayElement.textContent = '00:00:00.000';
       return;
     }
-    
+
     const elapsedTime = this.getElapsedTime();
     this.displayElement.textContent = this.formatTime(elapsedTime);
   }
@@ -90,7 +90,7 @@ class RaceTimer {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
     const milliseconds = timeInMs % 1000;
-    
+
     return `${this.padZero(hours)}:${this.padZero(minutes)}:${this.padZero(seconds)}.${this.padZero(milliseconds, 3)}`;
   }
 
@@ -105,12 +105,12 @@ class RaceTimer {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
     const milliseconds = timeInMs % 1000;
-    
+
     let result = '';
     if (hours > 0) result += `${hours}h `;
     if (minutes > 0 || hours > 0) result += `${minutes}m `;
     result += `${seconds}.${this.padZero(milliseconds, 3)}s`;
-    
+
     return result.trim();
   }
 
@@ -125,12 +125,12 @@ class RaceTimer {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
     const milliseconds = timeInMs % 1000;
-    
+
     let result = '';
     if (hours > 0) result += `${hours}h `;
     if (minutes > 0 || hours > 0) result += `${minutes}m `;
     result += `${seconds}.${this.padZero(milliseconds, 3)}s`;
-    
+
     return result.trim();
   }
 

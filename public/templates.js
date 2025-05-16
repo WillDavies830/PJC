@@ -1,15 +1,16 @@
 
 const Templates = {
-  noRaces: function() {
+  noRaces: function () {
     return '<p>No races found</p>';
   },
-  
-  raceCard: function(race, isAdmin) {
+
+  raceCard: function (race, isAdmin) {
     return `
       <h3>${race.name}</h3>
       <p>Date: ${new Date(race.date).toLocaleDateString()}</p>
-      <p>Status: ${race.status === 'pending' ? 'Not Started' : 
-                race.status === 'active' ? 'In Progress' : 'Completed'}</p>
+      <p>Status: ${race.status === 'pending'
+? 'Not Started'
+                : race.status === 'active' ? 'In Progress' : 'Completed'}</p>
       <section class="race-card-buttons">
         ${isAdmin ? '<button class="primary-button control-button">Race Timer</button>' : ''}
         <button class="secondary-button results-button">View Results</button>
@@ -18,48 +19,48 @@ const Templates = {
       </section>
     `;
   },
-  
-  resultItem: function(result, position, formatTimeFn) {
+
+  resultItem: function (result, position, formatTimeFn) {
     return `
       <span><strong>Bib #${result.runnerNumber}</strong></span>
       <span>${formatTimeFn(result.raceTime)}</span>
     `;
   },
-  
-  noResults: function() {
+
+  noResults: function () {
     return '<p>No results recorded yet</p>';
   },
-  
-  resultsTable: function(results, formatTimeFn) {
+
+  resultsTable: function (results, formatTimeFn) {
     if (results.length === 0) {
       return '<p>No results available for this race</p>';
     }
-    let html = `<table><thead><tr><th>Position</th><th>Bib Number</th><th>Finish Time</th></tr></thead><tbody>`;
-    
+    let html = '<table><thead><tr><th>Position</th><th>Bib Number</th><th>Finish Time</th></tr></thead><tbody>';
+
     results.forEach((result, index) => {
       const formattedRaceTime = formatTimeFn(result.raceTime);
       const bibDisplay = `<strong>#${result.runnerNumber}</strong>`;
-      
+
       html += `<tr><td>${index + 1}</td><td>${bibDisplay}</td><td>${formattedRaceTime}</td></tr>`;
     });
-    
-    html += `</tbody></table>`;
+
+    html += '</tbody></table>';
     return html;
   },
-  
-  syncStatus: function(hasUnsyncedData, isOnline) {
+
+  syncStatus: function (hasUnsyncedData, isOnline) {
     if (hasUnsyncedData && isOnline) {
-      return `<p>You have unsynchronized race data</p><button id="sync-now-button" class="action-button">Sync Now</button>`;
+      return '<p>You have unsynchronized race data</p><button id="sync-now-button" class="action-button">Sync Now</button>';
     }
     return '';
   },
-  
-  connectionStatus: function(isOnline) {
+
+  connectionStatus: function (isOnline) {
     return isOnline ? 'Online' : 'Offline';
   },
-  
-  notification: function(message) {
+
+  notification: function (message) {
     return message;
-  }
+  },
 };
 window.Templates = Templates;
