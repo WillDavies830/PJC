@@ -400,3 +400,96 @@ tr:nth-child(even) {
     flex: 1 1 100%;
   }
 }
+
+/* Add these CSS rules to your style.css file */
+
+/* Make semantic elements behave like divs where needed */
+section, article, nav, aside, time {
+  display: block;
+}
+
+/* Ensure the timer display works with time element */
+#timer-display, 
+time#timer-display {
+  font-size: 48px;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0;
+  font-family: monospace;
+  display: block;
+}
+
+/* Ensure fieldsets in forms look like the original div.form-group */
+fieldset.form-group {
+  margin-bottom: 15px;
+  border: none;
+  padding: 0;
+}
+
+/* Support for article elements in results list */
+article#results-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 15px 0;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 10px;
+}
+
+/* Support for section elements in race cards and other containers */
+section#races-container article.race-card {
+  background-color: var(--card-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing);
+  margin-bottom: var(--spacing);
+  box-shadow: var(--box-shadow);
+}
+
+/* Adjust the aside for role selector */
+aside.role-selector {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 5px 10px;
+  border-radius: var(--border-radius);
+  z-index: 100;
+}
+
+/* Support for nav element as button container */
+nav.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+/* Adjust notification aside */
+aside#notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--border-radius);
+  z-index: 1000;
+  transition: opacity 0.3s;
+}
+
+/* Support for section as runner input */
+section#runner-input {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: var(--card-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+/* Ensure section for recorded results looks good */
+section#recorded-results h3 {
+  margin-top: 20px;
+}

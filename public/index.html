@@ -12,94 +12,96 @@
 <body>
   <header>
     <h1>Race Control</h1>
-    <div id="connection-status" class="online">Online</div>
+    <span id="connection-status" class="online">Online</span>
   </header>
-<div class="role-selector">
-  <label for="user-role">Role:</label>
-  <select id="user-role">
-    <option value="admin">Admin</option>
-    <option value="runner">Runner</option>
-  </select>
-</div>
+  
+  <aside class="role-selector">
+    <label for="user-role">Role:</label>
+    <select id="user-role">
+      <option value="admin">Admin</option>
+      <option value="runner">Runner</option>
+    </select>
+  </aside>
+  
   <main>
-    <div id="home-screen" class="screen active">
+    <section id="home-screen" class="screen active">
       <h2>Portsmouth Joggers' Club</h2>
-      <div class="button-container">
+      <nav class="button-container">
         <button id="create-race-button" class="primary-button">Create New Race</button>
         <button id="view-races-button" class="primary-button">View Races</button>
-      </div>
-      <div id="sync-status" class="hidden">
+      </nav>
+      <section id="sync-status" class="hidden">
         <p>You have unsynchronized race data</p>
         <button id="sync-now-button" class="action-button">Sync Now</button>
-      </div>
-    </div>
+      </section>
+    </section>
 
-    <div id="create-race-screen" class="screen">
+    <section id="create-race-screen" class="screen">
       <h2>Create New Race</h2>
       <form id="create-race-form">
-        <div class="form-group">
+        <fieldset class="form-group">
           <label for="race-name">Race Name:</label>
           <input type="text" id="race-name" required>
-        </div>
-        <div class="form-group">
+        </fieldset>
+        <fieldset class="form-group">
           <label for="race-date">Race Date:</label>
           <input type="date" id="race-date" required>
-        </div>
-        <div class="button-container">
+        </fieldset>
+        <nav class="button-container">
           <button type="submit" class="primary-button">Create Race</button>
           <button type="button" id="cancel-create" class="secondary-button">Cancel</button>
-        </div>
+        </nav>
       </form>
-    </div>
+    </section>
 
-    <div id="races-list-screen" class="screen">
+    <section id="races-list-screen" class="screen">
       <h2>Available Races</h2>
-      <div id="races-container"></div>
-      <div class="button-container">
+      <section id="races-container"></section>
+      <nav class="button-container">
         <button id="back-to-home" class="secondary-button">Back</button>
-      </div>
-    </div>
+      </nav>
+    </section>
 
-    <div id="race-control-screen" class="screen">
+    <section id="race-control-screen" class="screen">
       <h2 id="race-name-display"></h2>
-      <div id="timer-display">00:00:00</div>
-      <div id="timer-controls">
+      <time id="timer-display">00:00:00</time>
+      <nav id="timer-controls">
         <button id="start-timer-button" class="action-button">Start Race</button>
         <button id="end-race-button" class="action-button" disabled>End Race</button>
-      </div>
+      </nav>
 
-      <div id="runner-input">
+      <section id="runner-input">
         <form id="record-finish-form">
-          <div class="form-group">
+          <fieldset class="form-group">
             <label for="runner-number"><strong>Bib Number:</strong></label>
             <input type="number" id="runner-number" min="1" required>
-          </div>
+          </fieldset>
           <button type="submit" class="primary-button">Record</button>
         </form>
-      </div>
+      </section>
       
-      <div id="recorded-results">
+      <section id="recorded-results">
         <h3>Recorded Results</h3>
-        <div id="results-list"></div>
-      </div>
+        <article id="results-list"></article>
+      </section>
 
-      <div class="button-container">
+      <nav class="button-container">
         <button id="upload-results-button" class="primary-button" disabled>Upload Results</button>
         <button id="clear-results-button" class="secondary-button" disabled>Clear Results</button>
         <button id="back-to-races" class="secondary-button">Back</button>
-      </div>
-    </div>
+      </nav>
+    </section>
 
-    <div id="results-screen" class="screen">
+    <section id="results-screen" class="screen">
       <h2 id="results-race-name"></h2>
-      <div id="results-table-container"></div>
-      <div class="button-container">
+      <section id="results-table-container"></section>
+      <nav class="button-container">
         <button id="back-from-results" class="secondary-button">Back</button>
-      </div>
-    </div>
+      </nav>
+    </section>
   </main>
 
-  <div id="notification" class="notification hidden"></div>
+  <aside id="notification" class="notification hidden"></aside>
 
   <script src="templates.js"></script>
   <script src="offline.js"></script>

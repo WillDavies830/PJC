@@ -35,7 +35,7 @@ const Templates = {
     }
     
     // Simplified table with only position, bib number, and race time
-    let html = `<table><thead><tr><th>Position</th><th>Bib Number</th><th>Race Time</th></tr></thead><tbody>`;
+    let html = `<table><thead><tr><th>Position</th><th>Bib Number</th><th>Finish Time</th></tr></thead><tbody>`;
     
     results.forEach((result, index) => {
       // Format the race time with milliseconds using the provided formatting function
