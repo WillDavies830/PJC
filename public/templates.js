@@ -1,3 +1,4 @@
+
 const Templates = {
   noRaces: function() {
     return '<p>No races found</p>';
@@ -9,19 +10,19 @@ const Templates = {
       <p>Date: ${new Date(race.date).toLocaleDateString()}</p>
       <p>Status: ${race.status === 'pending' ? 'Not Started' : 
                 race.status === 'active' ? 'In Progress' : 'Completed'}</p>
-      <div class="race-card-buttons">
+      <section class="race-card-buttons">
         ${isAdmin ? '<button class="primary-button control-button">Race Timer</button>' : ''}
         <button class="secondary-button results-button">View Results</button>
         <button class="export-button export-csv-button">Export CSV</button>
         ${isAdmin ? '<button class="danger-button delete-button">Delete Race</button>' : ''}
-      </div>
+      </section>
     `;
   },
   
   resultItem: function(result, position, formatTimeFn) {
     return `
-      <div><strong>Bib #${result.runnerNumber}</strong></div>
-      <div>${formatTimeFn(result.raceTime)}</div>
+      <span><strong>Bib #${result.runnerNumber}</strong></span>
+      <span>${formatTimeFn(result.raceTime)}</span>
     `;
   },
   
