@@ -1,16 +1,11 @@
-/**
- * Race Control Application
- * Main application logic
- */
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize app components
   const app = new RaceControlApp();
   app.init();
 });
 
 class RaceControlApp {
   constructor() {
-    // Initialize state
     this.currentScreen = 'home-screen';
     this.currentRaceId = null;
     this.currentRace = null;
@@ -18,7 +13,6 @@ class RaceControlApp {
     this.results = [];
     this.userRole = localStorage.getItem('userRole') || 'admin';
     
-    // Cache DOM elements
     this.screens = {
       home: document.querySelector('#home-screen'),
       createRace: document.querySelector('#create-race-screen'),
@@ -27,14 +21,13 @@ class RaceControlApp {
       results: document.querySelector('#results-screen')
     };
     
-    // Button elements
     this.buttons = {
       createRace: document.querySelector('#create-race-button'),
       viewRaces: document.querySelector('#view-races-button'),
       cancelCreate: document.querySelector('#cancel-create'),
       backToHome: document.querySelector('#back-to-home'),
       startTimer: document.querySelector('#start-timer-button'),
-      recordFinish: document.querySelector('#record-button'), // This might be removed from HTML
+      recordFinish: document.querySelector('#record-button'),
       endRace: document.querySelector('#end-race-button'),
       uploadResults: document.querySelector('#upload-results-button'),
       clearResults: document.querySelector('#clear-results-button'),
@@ -42,14 +35,12 @@ class RaceControlApp {
       backFromResults: document.querySelector('#back-from-results'),
       syncNow: document.querySelector('#sync-now-button')
     };
-    
-    // Forms
+
     this.forms = {
       createRace: document.querySelector('#create-race-form'),
       recordFinish: document.querySelector('#record-finish-form')
     };
-    
-    // Other elements
+
     this.elements = {
       racesContainer: document.querySelector('#races-container'),
       raceNameDisplay: document.querySelector('#race-name-display'),
@@ -61,44 +52,31 @@ class RaceControlApp {
     };
   }
   
-  /**
-   * Initialize the application
-   */
   init() {
     this.bindEventListeners();
     this.initRoleBasedAccess();
     this.showScreen('home-screen');
   }
   
-  /**
-   * Bind event listeners to UI elements
-   */
   bindEventListeners() {
-    // Navigation buttons
     this.buttons.createRace.addEventListener('click', () => this.showScreen('create-race-screen'));
     this.buttons.viewRaces.addEventListener('click', () => this.loadRaces());
     this.buttons.cancelCreate.addEventListener('click', () => this.showScreen('home-screen'));
     this.buttons.backToHome.addEventListener('click', () => this.showScreen('home-screen'));
     this.buttons.backToRaces.addEventListener('click', () => this.loadRaces());
     this.buttons.backFromResults.addEventListener('click', () => this.loadRaces());
-    
-    // Race control buttons
     this.buttons.startTimer.addEventListener('click', () => this.startRace());
-    // Only add event listener if record button exists (it might have been removed)
+
     if (this.buttons.recordFinish) {
-      // Remove this line if you removed the Record Finish button from HTML
       this.buttons.recordFinish.addEventListener('click', () => this.refreshElementReferences());
     }
     this.buttons.endRace.addEventListener('click', () => this.endRace());
     this.buttons.uploadResults.addEventListener('click', () => this.uploadResults());
     this.buttons.clearResults.addEventListener('click', () => this.clearResults());
     
-    // Sync button
     if (this.buttons.syncNow) {
       this.buttons.syncNow.addEventListener('click', () => window.offlineStorage.syncResults());
     }
-    
-    // Forms
     this.forms.createRace.addEventListener('submit', (e) => {
       e.preventDefault();
       this.createRace();
@@ -112,62 +90,35 @@ class RaceControlApp {
     }
   }
 
-  /**
-   * Refresh dynamic element references that might not be available at initialization
-   */
   refreshElementReferences() {
-    // Update runner input references
     this.elements.runnerInput = document.querySelector('#runner-input');
     this.elements.runnerNumber = document.querySelector('#runner-number');
-    
-    // Update form references that might be dynamic
     this.forms.recordFinish = document.querySelector('#record-finish-form');
   }
 
-  /**
-   * Initialize role-based access control
-   */
   initRoleBasedAccess() {
-    // Get the role selector element
     const roleSelector = document.querySelector('#user-role');
-    
     if (roleSelector) {
-      // Set the initial value based on saved preference
       roleSelector.value = this.userRole;
-      
-      // Update body class based on role
       document.body.classList.toggle('admin-role', this.userRole === 'admin');
-      
-      // Add change event listener
       roleSelector.addEventListener('change', (e) => {
         this.userRole = e.target.value;
         localStorage.setItem('userRole', this.userRole);
-        
-        // Update body class
         document.body.classList.toggle('admin-role', this.userRole === 'admin');
-        
-        // If on the home screen, update visible buttons
         if (this.currentScreen === 'home-screen') {
           this.updateHomeScreenButtons();
         } else if (this.currentScreen === 'races-list-screen') {
-          // If on the races list screen, refresh the view
           this.loadRaces();
         }
       });
     }
     
-    // Update home screen buttons initially
     this.updateHomeScreenButtons();
   }
 
-  /**
-   * Update home screen buttons based on role
-   */
   updateHomeScreenButtons() {
     if (this.buttons.createRace) {
       this.buttons.createRace.classList.toggle('admin-only', true);
-      
-      // Show/hide based on role
       if (this.userRole === 'admin') {
         this.buttons.createRace.style.display = 'block';
       } else {
@@ -176,20 +127,11 @@ class RaceControlApp {
     }
   }
 
-  /**
-   * Check if user has admin permissions
-   * @returns {boolean} True if user is admin
-   */
   isAdmin() {
     return this.userRole === 'admin';
   }
   
-  /**
-   * Show a specific screen and hide others
-   * @param {string} screenId - The ID of the screen to show
-   */
   showScreen(screenId) {
-    // If user is not admin, restrict access to admin-only screens
     if (!this.isAdmin() && (screenId === 'create-race-screen' || screenId === 'race-control-screen')) {
       showNotification('You do not have permission to access this screen', 3000);
       return;
@@ -202,20 +144,13 @@ class RaceControlApp {
     document.querySelector(`#${screenId}`).classList.add('active');
     this.currentScreen = screenId;
     
-    // Special handling for screens
     if (screenId === 'race-control-screen') {
-      // Initialize timer display
       this.raceTimer.updateDisplay();
-      // Refresh element references when showing race control screen
       this.refreshElementReferences();
     }
   }
   
-  /**
-   * Create a new race
-   */
   async createRace() {
-    // Check if user has admin permissions
     if (!this.isAdmin()) {
       showNotification('You do not have permission to create races', 3000);
       return;
@@ -223,7 +158,6 @@ class RaceControlApp {
     
     const nameInput = document.querySelector('#race-name');
     const dateInput = document.querySelector('#race-date');
-    
     const name = nameInput.value.trim();
     const date = dateInput.value;
     
@@ -233,7 +167,6 @@ class RaceControlApp {
     }
     
     try {
-      // Check if we're online first
       if (!window.offlineStorage.isDeviceOnline()) {
         showNotification('Cannot create races while offline', 3000);
         return;
@@ -252,12 +185,8 @@ class RaceControlApp {
       }
       
       const race = await response.json();
-      
-      // Reset the form
       nameInput.value = '';
       dateInput.value = '';
-      
-      // Show the race control screen
       this.loadRaceControl(race.id);
       
     } catch (error) {
@@ -266,33 +195,21 @@ class RaceControlApp {
     }
   }
   
-  /**
-   * Load the list of races
-   */
   async loadRaces() {
     try {
-      // Check if we're online first
       if (!window.offlineStorage.isDeviceOnline()) {
         showNotification('Cannot load races while offline', 3000);
         return;
       }
-      
       const response = await fetch('/api/races');
-      
       if (!response.ok) {
         throw new Error('Failed to load races');
       }
-      
       const races = await response.json();
-      
-      // Clear the container
       this.elements.racesContainer.innerHTML = '';
-      
       if (races.length === 0) {
-        // REPLACE WITH TEMPLATE
         this.elements.racesContainer.innerHTML = Templates.noRaces();
       } else {
-        // Add each race to the container
         races.forEach(race => {
           const raceCard = document.createElement('div');
           raceCard.className = 'race-card';
@@ -301,137 +218,91 @@ class RaceControlApp {
           const date = new Date(race.date).toLocaleDateString();
           const isAdmin = this.isAdmin();
           raceCard.innerHTML = Templates.raceCard(race, isAdmin);
-          
-          // Add event listeners only for buttons that exist (KEEP ALL OF THIS)
           if (isAdmin) {
             raceCard.querySelector('.control-button').addEventListener('click', () => {
               this.loadRaceControl(race.id);
             });
-            
             raceCard.querySelector('.delete-button').addEventListener('click', (e) => {
               e.stopPropagation();
               this.deleteRace(race.id);
             });
           }
-          
           raceCard.querySelector('.results-button').addEventListener('click', () => {
             this.loadRaceResults(race.id);
           });
-          
           raceCard.querySelector('.export-csv-button').addEventListener('click', (e) => {
             e.stopPropagation();
             this.exportRaceResults(race.id, race.name);
           });
-          
           this.elements.racesContainer.appendChild(raceCard);
         });
       }
-      
-      // Show the races list screen
       this.showScreen('races-list-screen');
-      
     } catch (error) {
       console.error('Load races error:', error);
       showNotification('Failed to load races', 3000);
     }
   }
 
-  /**
-   * Delete a race
-   * @param {number} raceId - The ID of the race to delete
-   */
   async deleteRace(raceId) {
-    // Check if user has admin permissions
     if (!this.isAdmin()) {
       showNotification('You do not have permission to delete races', 3000);
       return;
     }
-    
     if (!confirm('Are you sure you want to delete this race? This action cannot be undone.')) {
       return;
     }
-    
     try {
-      // Check if we're online first
       if (!window.offlineStorage.isDeviceOnline()) {
         showNotification('Cannot delete races while offline', 3000);
         return;
       }
-      
       const response = await fetch(`/api/races/${raceId}`, {
         method: 'DELETE'
       });
-      
       if (!response.ok) {
         throw new Error('Failed to delete race');
       }
-      
       showNotification('Race deleted successfully', 3000);
-      
-      // Reload the races list
       this.loadRaces();
-      
     } catch (error) {
       console.error('Delete race error:', error);
       showNotification('Failed to delete race', 3000);
     }
   }
   
-  /**
-   * Load the race control screen for a specific race
-   * @param {number} raceId - The ID of the race to control
-   */
   async loadRaceControl(raceId) {
-    // Check if user has admin permissions
     if (!this.isAdmin()) {
       showNotification('You do not have permission to control races', 3000);
       return;
     }
     
     try {
-      // Check if we're online first to load race details
       if (!window.offlineStorage.isDeviceOnline()) {
         showNotification('Cannot load race details while offline', 3000);
         return;
       }
-      
       const response = await fetch(`/api/races/${raceId}`);
-      
       if (!response.ok) {
         throw new Error('Failed to load race details');
       }
-      
       const race = await response.json();
       this.currentRace = race;
       this.currentRaceId = raceId;
-      
-      // Update the race name display
       if (this.elements.raceNameDisplay) {
         this.elements.raceNameDisplay.textContent = race.name;
       }
-      
-      // Reset results
       this.results = [];
       this.updateResultsList();
-      
-      // Reset and update timer
       this.raceTimer.reset();
-      
-      // Show the race control screen (this will also refresh element references)
       this.showScreen('race-control-screen');
-      
-      // Make sure we have up-to-date element references
       this.refreshElementReferences();
-      
-      // Update button states based on race status
       if (race.status === 'pending') {
         if (this.buttons.startTimer) this.buttons.startTimer.disabled = false;
         if (this.buttons.recordFinish) this.buttons.recordFinish.disabled = true;
         if (this.buttons.endRace) this.buttons.endRace.disabled = true;
         if (this.buttons.uploadResults) this.buttons.uploadResults.disabled = true;
         if (this.buttons.clearResults) this.buttons.clearResults.disabled = true;
-        
-        // Disable the runner input instead of hiding it
         if (this.elements.runnerNumber) {
           this.elements.runnerNumber.disabled = true;
         }
@@ -441,38 +312,28 @@ class RaceControlApp {
         if (this.buttons.endRace) this.buttons.endRace.disabled = false;
         if (this.buttons.uploadResults) this.buttons.uploadResults.disabled = false;
         if (this.buttons.clearResults) this.buttons.clearResults.disabled = false;
-        
-        // Enable the runner input for active races
         if (this.elements.runnerNumber) {
           this.elements.runnerNumber.disabled = false;
           this.elements.runnerNumber.focus();
         }
-        
-        // Start the timer with the saved start time
         if (race.startTime) {
           this.raceTimer.start(parseInt(race.startTime));
         }
       } else {
-        // Race is completed
         if (this.buttons.startTimer) this.buttons.startTimer.disabled = true;
         if (this.buttons.recordFinish) this.buttons.recordFinish.disabled = true;
         if (this.buttons.endRace) this.buttons.endRace.disabled = true;
         if (this.buttons.uploadResults) this.buttons.uploadResults.disabled = false;
         if (this.buttons.clearResults) this.buttons.clearResults.disabled = false;
-        
-        // Disable the runner input for completed races
         if (this.elements.runnerNumber) {
           this.elements.runnerNumber.disabled = true;
         }
-        
-        // Show the timer at its final state
         if (race.startTime) {
           this.raceTimer.start(parseInt(race.startTime));
           this.raceTimer.stop();
         }
       }
       
-      // Check for locally stored results for this race
       const storedData = window.offlineStorage.getStoredData();
       if (storedData && storedData.raceId === raceId && storedData.results) {
         this.results = storedData.results;
@@ -480,38 +341,27 @@ class RaceControlApp {
         if (this.buttons.uploadResults) this.buttons.uploadResults.disabled = false;
         if (this.buttons.clearResults) this.buttons.clearResults.disabled = false;
       }
-      
     } catch (error) {
       console.error('Load race control error:', error);
       showNotification('Failed to load race control', 3000);
     }
   }
   
-  /**
-   * Start the race
-   */
   async startRace() {
-    // Check if user has admin permissions
     if (!this.isAdmin()) {
       showNotification('You do not have permission to start races', 3000);
       return;
     }
-    
     if (!this.currentRaceId) {
       showNotification('No race selected', 3000);
       return;
     }
-    
     try {
-      // Check if we're online first
       if (!window.offlineStorage.isDeviceOnline()) {
         showNotification('Cannot start race while offline', 3000);
         return;
       }
-      
-      // Start the timer
       const startTime = this.raceTimer.start();
-      
       const response = await fetch(`/api/races/${this.currentRaceId}/start`, {
         method: 'PUT',
         headers: {
@@ -519,35 +369,26 @@ class RaceControlApp {
         },
         body: JSON.stringify({ startTime })
       });
-      
       if (!response.ok) {
-        // Stop the timer if the request failed
         this.raceTimer.stop();
         throw new Error('Failed to start race');
       }
-      
-      // Update current race data
       const updatedRace = await response.json();
       this.currentRace = {
         ...this.currentRace,
         startTime: updatedRace.startTime,
         status: updatedRace.status
       };
-      
-      // Update button states
       if (this.buttons.startTimer) this.buttons.startTimer.disabled = true;
       if (this.buttons.recordFinish) this.buttons.recordFinish.disabled = false;
       if (this.buttons.endRace) this.buttons.endRace.disabled = false;
       if (this.buttons.uploadResults) this.buttons.uploadResults.disabled = false;
       if (this.buttons.clearResults) this.buttons.clearResults.disabled = false;
-      
-      // Refresh element references and enable runner input
       this.refreshElementReferences();
       if (this.elements.runnerNumber) {
         this.elements.runnerNumber.disabled = false;
         this.elements.runnerNumber.focus();
       }
-      
       showNotification('Race started', 3000);
       
     } catch (error) {
@@ -556,115 +397,71 @@ class RaceControlApp {
     }
   }
   
-  /**
- * Record a runner finish
- */
 recordFinish() {
-  // Check if user has admin permissions
   if (!this.isAdmin()) {
     showNotification('You do not have permission to record finishes', 3000);
     return;
   }
-  
   if (!this.currentRaceId) {
     showNotification('No race selected', 3000);
     return;
   }
-  
   if (!this.raceTimer.isRunning) {
     showNotification('Race timer not running', 3000);
     return;
   }
-  
-  // Refresh element references
   this.refreshElementReferences();
-  
-  // Safely get the bib number
   if (!this.elements.runnerNumber) {
     showNotification('Bib number input not available', 3000);
     return;
   }
-  
   const bibNumber = parseInt(this.elements.runnerNumber.value);
   if (isNaN(bibNumber) || bibNumber <= 0) {
     showNotification('Invalid bib number', 3000);
     return;
   }
-
-  // Check if this bib number has already been recorded
   const bibExists = this.results.some(result => result.runnerNumber === bibNumber);
   if (bibExists) {
     showNotification(`Bib #${bibNumber} has already been recorded`, 3000);
-    // Optionally clear the input field for next entry
     this.elements.runnerNumber.value = '';
     this.elements.runnerNumber.focus();
     return;
   }
-  
-  // Record the finish time
   const finishTime = this.raceTimer.recordFinish();
-  
-  // Calculate race time
   const raceTime = finishTime - this.raceTimer.startTime;
-  
-  // Create result object
   const result = {
     runnerNumber: bibNumber,
     finishTime,
     raceTime
   };
-  
-  // Add to local results
   this.results.push(result);
-  
-  // Store results locally for offline support
   window.offlineStorage.storeResult({
     raceId: this.currentRaceId,
     runnerNumber: bibNumber,
     finishTime
   });
-  
-  // Update the results list
   this.updateResultsList();
-  
-  // Reset the input field for next entry
   this.elements.runnerNumber.value = '';
   this.elements.runnerNumber.focus();
-  
-  // Enable upload and clear buttons
   if (this.buttons.uploadResults) this.buttons.uploadResults.disabled = false;
   if (this.buttons.clearResults) this.buttons.clearResults.disabled = false;
-  
-  // Show confirmation with bib number
   showNotification(`Recorded: Bib #${bibNumber} - ${this.formatTimeDisplay(raceTime)}`, 2000);
 }
   
-  /**
-   * Update the results list display
-   */
   updateResultsList() {
     if (!this.elements.resultsList) return;
-    
-    // Clear the list
     this.elements.resultsList.innerHTML = '';
     
     if (this.results.length === 0) {
-      // REPLACE WITH TEMPLATE
       this.elements.resultsList.innerHTML = Templates.noResults();
       return;
     }
-    
-    // Sort results by finish time (ascending) - KEEP THIS
     const sortedResults = [...this.results].sort((a, b) => a.finishTime - b.finishTime);
-    
-    // Add each result to the list
     sortedResults.forEach((result, index) => {
       const resultItem = document.createElement('div');
       resultItem.className = 'result-item';
       
       const position = index + 1;
-      
-      // REPLACE WITH TEMPLATE
       resultItem.innerHTML = Templates.resultItem(
         result, 
         position, 
@@ -674,66 +471,45 @@ recordFinish() {
       this.elements.resultsList.appendChild(resultItem);
     });
   }
-  
-  /**
-   * End the race
-   */
+
   async endRace() {
-    // Check if user has admin permissions
     if (!this.isAdmin()) {
       showNotification('You do not have permission to end races', 3000);
       return;
     }
-    
     if (!this.currentRaceId) {
       showNotification('No race selected', 3000);
       return;
     }
-    
     try {
-      // Check if we're online first
       if (!window.offlineStorage.isDeviceOnline()) {
-        // If offline, just stop the timer locally
         this.raceTimer.stop();
         showNotification('Race timer stopped', 3000);
         return;
       }
-      
-      // Stop the timer
       this.raceTimer.stop();
-      
       const response = await fetch(`/api/races/${this.currentRaceId}/end`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         }
       });
-      
       if (!response.ok) {
         throw new Error('Failed to end race');
       }
-      
-      // Update current race data
       const updatedRace = await response.json();
       this.currentRace = {
         ...this.currentRace,
         status: updatedRace.status
       };
-      
-      // Update button states
       if (this.buttons.startTimer) this.buttons.startTimer.disabled = true;
       if (this.buttons.recordFinish) this.buttons.recordFinish.disabled = true;
       if (this.buttons.endRace) this.buttons.endRace.disabled = true;
-      
-      // Refresh element references and disable runner input
       this.refreshElementReferences();
       if (this.elements.runnerNumber) {
         this.elements.runnerNumber.disabled = true;
       }
-      
       showNotification('Race ended', 3000);
-      
-      // Ask to upload results if there are any and we're online
       if (this.results.length > 0 && window.offlineStorage.isDeviceOnline()) {
         if (confirm('Would you like to upload the race results now?')) {
           this.uploadResults();
@@ -745,34 +521,25 @@ recordFinish() {
       showNotification('Failed to end race', 3000);
     }
   }
-  
-  /**
-   * Upload race results to the server
-   */
+
   async uploadResults() {
-    // Check if user has admin permissions
     if (!this.isAdmin()) {
       showNotification('You do not have permission to upload results', 3000);
       return;
     }
-    
     if (!this.currentRaceId) {
       showNotification('No race selected', 3000);
       return;
     }
-    
     if (this.results.length === 0) {
       showNotification('No results to upload', 3000);
       return;
     }
-    
     try {
-      // Check if we're online first
       if (!window.offlineStorage.isDeviceOnline()) {
         showNotification('Results saved offline and will sync when online', 3000);
         return;
       }
-      
       const response = await fetch(`/api/races/${this.currentRaceId}/results`, {
         method: 'POST',
         headers: {
@@ -790,44 +557,30 @@ recordFinish() {
       if (!response.ok) {
         throw new Error('Failed to upload results');
       }
-      
-      // Clear local results
       this.results = [];
       this.updateResultsList();
       window.offlineStorage.clearResults();
-      
-      // Update button states
       if (this.buttons.uploadResults) this.buttons.uploadResults.disabled = true;
       if (this.buttons.clearResults) this.buttons.clearResults.disabled = true;
-      
       showNotification('Results uploaded successfully', 3000);
-      
     } catch (error) {
       console.error('Upload results error:', error);
       showNotification('Failed to upload results', 3000);
     }
   }
   
-  /**
-   * Clear recorded results
-   */
   clearResults() {
-    // Check if user has admin permissions
     if (!this.isAdmin()) {
       showNotification('You do not have permission to clear results', 3000);
       return;
     }
-    
     if (this.results.length === 0) {
       return;
     }
-    
     if (confirm('Are you sure you want to clear all recorded results?')) {
       this.results = [];
       this.updateResultsList();
       window.offlineStorage.clearResults();
-      
-      // Update button states
       if (this.buttons.uploadResults) this.buttons.uploadResults.disabled = true;
       if (this.buttons.clearResults) this.buttons.clearResults.disabled = true;
       
@@ -837,133 +590,76 @@ recordFinish() {
 
   async exportRaceResults(raceId, raceName) {
     try {
-      // Check if we're online first
       if (!window.offlineStorage.isDeviceOnline()) {
         showNotification('Cannot export results while offline', 3000);
         return;
       }
-      
       showNotification('Preparing export...', 2000);
-      
-      // Fetch race details
       const raceResponse = await fetch(`/api/races/${raceId}`);
-      
       if (!raceResponse.ok) {
         throw new Error('Failed to load race details');
       }
-      
       const race = await raceResponse.json();
-      
-      // Fetch race results
       const resultsResponse = await fetch(`/api/races/${raceId}/results`);
-      
       if (!resultsResponse.ok) {
         throw new Error('Failed to load race results');
       }
-      
       const results = await resultsResponse.json();
-      
-      // If no results, show a message
       if (results.length === 0) {
         showNotification('No results available to export', 3000);
         return;
       }
-      
-      // Sort results by race time (ascending)
       const sortedResults = [...results].sort((a, b) => a.raceTime - b.raceTime);
-      
-      // Format the race date
       const raceDate = new Date(race.date).toLocaleDateString();
-      
-      // Create CSV content
       let csvContent = 'data:text/csv;charset=utf-8,';
-      
-      // Add header row - simplified to match the requirements
       csvContent += 'Position,Bib Number,Race Time\n';
-      
-      // Add data rows
       sortedResults.forEach((result, index) => {
         const position = index + 1;
-        
-        // Format race time with milliseconds
         const raceTimeFormatted = this.formatTimeDisplay(result.raceTime);
-        
         csvContent += `${position},${result.runnerNumber},"${raceTimeFormatted}"\n`;
       });
-      
-      // Create a filename with race name and date
       const sanitizedRaceName = raceName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
       const filename = `${sanitizedRaceName}_results_${raceDate.replace(/\//g, '-')}.csv`;
-      
-      // Create download link
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement('a');
       link.setAttribute('href', encodedUri);
       link.setAttribute('download', filename);
       document.body.appendChild(link);
-      
-      // Trigger download
       link.click();
-      
-      // Clean up
       document.body.removeChild(link);
-      
       showNotification('Export completed', 3000);
-      
     } catch (error) {
       console.error('Export race results error:', error);
       showNotification('Failed to export results', 3000);
     }
   }
-  
-  /**
-   * Load race results
-   * @param {number} raceId - The ID of the race to load results for
-   */
+
   async loadRaceResults(raceId) {
     try {
-      // Check if we're online first
       if (!window.offlineStorage.isDeviceOnline()) {
         showNotification('Cannot load results while offline', 3000);
         return;
       }
-      
-      // Fetch race details
       const raceResponse = await fetch(`/api/races/${raceId}`);
-      
       if (!raceResponse.ok) {
         throw new Error('Failed to load race details');
       }
-      
       const race = await raceResponse.json();
-      
-      // Fetch race results
       const resultsResponse = await fetch(`/api/races/${raceId}/results`);
-      
       if (!resultsResponse.ok) {
         throw new Error('Failed to load race results');
       }
-      
       const results = await resultsResponse.json();
-      
-      // Update the race name display
       if (this.elements.resultsRaceName) {
         this.elements.resultsRaceName.textContent = race.name;
       }
-      
-      // Clear the results container
       if (this.elements.resultsTableContainer) {
-        // Sort results by race time (ascending)
         const sortedResults = [...results].sort((a, b) => a.raceTime - b.raceTime);
-        
-        // REPLACE WITH TEMPLATE
         this.elements.resultsTableContainer.innerHTML = Templates.resultsTable(
           sortedResults, 
           this.formatTimeDisplay.bind(this)
         );
       }
-      
-      // Show the results screen
       this.showScreen('results-screen');
       
     } catch (error) {
@@ -974,13 +670,11 @@ recordFinish() {
   
   formatTimeDisplay(timeInMs) {
     if (timeInMs === null || timeInMs === undefined) return 'N/A';
-    
     const totalSeconds = Math.floor(timeInMs / 1000);
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
     const milliseconds = timeInMs % 1000;
-    
     let result = '';
     if (hours > 0) {
       result += `${hours}h ${minutes}m ${seconds}.${milliseconds.toString().padStart(3, '0')}s`;
