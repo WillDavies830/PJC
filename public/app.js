@@ -557,86 +557,87 @@ class RaceControlApp {
   }
   
   /**
-   * Record a runner finish
-   */
-  recordFinish() {
-    // Check if user has admin permissions
-    if (!this.isAdmin()) {
-      showNotification('You do not have permission to record finishes', 3000);
-      return;
-    }
-    
-    if (!this.currentRaceId) {
-      showNotification('No race selected', 3000);
-      return;
-    }
-    
-    if (!this.raceTimer.isRunning) {
-      showNotification('Race timer not running', 3000);
-      return;
-    }
-    
-    // Refresh element references
-    this.refreshElementReferences();
-    
-    // Safely get the runner number
-    if (!this.elements.runnerNumber) {
-      showNotification('Runner input not available', 3000);
-      return;
-    }
-    
-    const runnerNumber = parseInt(this.elements.runnerNumber.value);
-    if (isNaN(runnerNumber) || runnerNumber <= 0) {
-      showNotification('Invalid runner number', 3000);
-      return;
-    }
+ * Record a runner finish
+ */
+recordFinish() {
+  // Check if user has admin permissions
+  if (!this.isAdmin()) {
+    showNotification('You do not have permission to record finishes', 3000);
+    return;
+  }
+  
+  if (!this.currentRaceId) {
+    showNotification('No race selected', 3000);
+    return;
+  }
+  
+  if (!this.raceTimer.isRunning) {
+    showNotification('Race timer not running', 3000);
+    return;
+  }
+  
+  // Refresh element references
+  this.refreshElementReferences();
+  
+  // Safely get the bib number
+  if (!this.elements.runnerNumber) {
+    showNotification('Bib number input not available', 3000);
+    return;
+  }
+  
+  const bibNumber = parseInt(this.elements.runnerNumber.value);
+  if (isNaN(bibNumber) || bibNumber <= 0) {
+    showNotification('Invalid bib number', 3000);
+    return;
+  }
 
-    // Check if this runner number has already been recorded
-    const runnerExists = this.results.some(result => result.runnerNumber === runnerNumber);
-    if (runnerExists) {
-      showNotification(`Runner ${runnerNumber} has already been recorded`, 3000);
-      // Optionally clear the input field for next entry
-      this.elements.runnerNumber.value = '';
-      this.elements.runnerNumber.focus();
-      return;
-    }
-    
-    // Record the finish time
-    const finishTime = this.raceTimer.recordFinish();
-    
-    // Calculate race time
-    const raceTime = finishTime - this.raceTimer.startTime;
-    
-    // Create result object
-    const result = {
-      runnerNumber,
-      finishTime,
-      raceTime
-    };
-    
-    // Add to local results
-    this.results.push(result);
-    
-    // Store results locally for offline support
-    window.offlineStorage.storeResult({
-      raceId: this.currentRaceId,
-      runnerNumber,
-      finishTime
-    });
-    
-    // Update the results list
-    this.updateResultsList();
-    
-    // Reset the input field for next entry
+  // Check if this bib number has already been recorded
+  const bibExists = this.results.some(result => result.runnerNumber === bibNumber);
+  if (bibExists) {
+    showNotification(`Bib #${bibNumber} has already been recorded`, 3000);
+    // Optionally clear the input field for next entry
     this.elements.runnerNumber.value = '';
     this.elements.runnerNumber.focus();
-    
-    // Enable upload and clear buttons
-    if (this.buttons.uploadResults) this.buttons.uploadResults.disabled = false;
-    if (this.buttons.clearResults) this.buttons.clearResults.disabled = false;
-    
-    showNotification(`Runner ${runnerNumber} recorded`, 2000);
+    return;
   }
+  
+  // Record the finish time
+  const finishTime = this.raceTimer.recordFinish();
+  
+  // Calculate race time
+  const raceTime = finishTime - this.raceTimer.startTime;
+  
+  // Create result object
+  const result = {
+    runnerNumber: bibNumber,
+    finishTime,
+    raceTime
+  };
+  
+  // Add to local results
+  this.results.push(result);
+  
+  // Store results locally for offline support
+  window.offlineStorage.storeResult({
+    raceId: this.currentRaceId,
+    runnerNumber: bibNumber,
+    finishTime
+  });
+  
+  // Update the results list
+  this.updateResultsList();
+  
+  // Reset the input field for next entry
+  this.elements.runnerNumber.value = '';
+  this.elements.runnerNumber.focus();
+  
+  // Enable upload and clear buttons
+  if (this.buttons.uploadResults) this.buttons.uploadResults.disabled = false;
+  if (this.buttons.clearResults) this.buttons.clearResults.disabled = false;
+  
+  // Show confirmation with bib number
+  showNotification(`Recorded: Bib #${bibNumber} - ${this.formatTimeDisplay(raceTime)}`, 2000);
+}
   
   /**
    * Update the results list display
@@ -834,11 +835,6 @@ class RaceControlApp {
     }
   }
 
-  /**
-   * Export race results to CSV
-   * @param {number} raceId - The ID of the race to export
-   * @param {string} raceName - The name of the race
-   */
   async exportRaceResults(raceId, raceName) {
     try {
       // Check if we're online first
@@ -882,16 +878,17 @@ class RaceControlApp {
       // Create CSV content
       let csvContent = 'data:text/csv;charset=utf-8,';
       
-      // Add header row
-      csvContent += 'Position,Runner Number,Race Time,Finish Time\n';
+      // Add header row - simplified to match the requirements
+      csvContent += 'Position,Bib Number,Race Time\n';
       
       // Add data rows
       sortedResults.forEach((result, index) => {
         const position = index + 1;
-        const raceTimeFormatted = this.formatTimeDisplay(result.raceTime);
-        const finishTimeFormatted = new Date(result.finishTime).toLocaleTimeString();
         
-        csvContent += `${position},${result.runnerNumber},"${raceTimeFormatted}","${finishTimeFormatted}"\n`;
+        // Format race time with milliseconds
+        const raceTimeFormatted = this.formatTimeDisplay(result.raceTime);
+        
+        csvContent += `${position},${result.runnerNumber},"${raceTimeFormatted}"\n`;
       });
       
       // Create a filename with race name and date
@@ -975,11 +972,6 @@ class RaceControlApp {
     }
   }
   
-  /**
-   * Format time in milliseconds to a readable format
-   * @param {number} timeInMs - Time in milliseconds
-   * @returns {string} Formatted time string
-   */
   formatTimeDisplay(timeInMs) {
     if (timeInMs === null || timeInMs === undefined) return 'N/A';
     
@@ -987,13 +979,16 @@ class RaceControlApp {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
+    const milliseconds = timeInMs % 1000;
     
+    let result = '';
     if (hours > 0) {
-      return `${hours}h ${minutes}m ${seconds}s`;
+      result += `${hours}h ${minutes}m ${seconds}.${milliseconds.toString().padStart(3, '0')}s`;
     } else if (minutes > 0) {
-      return `${minutes}m ${seconds}s`;
+      result += `${minutes}m ${seconds}.${milliseconds.toString().padStart(3, '0')}s`;
     } else {
-      return `${seconds}s`;
+      result += `${seconds}.${milliseconds.toString().padStart(3, '0')}s`;
     }
+    return result;
   }
 }
