@@ -10,7 +10,7 @@ const ASSETS_TO_CACHE = [
   '/manifest.json',
 ];
 
-// Install event - cache assets
+// cache assets
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -21,7 +21,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activate event - clean up old caches
+// clean up old caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -38,25 +38,18 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event - network-first for JS/CSS/HTML, cache-first for other resources
+// Fetch event
 self.addEventListener('fetch', event => {
-  // Skip cross-origin requests
   if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }
-
-  // For API requests, try network first, then fallback to offline handling
   if (event.request.url.includes('/api/')) {
     event.respondWith(
       fetch(event.request)
         .catch(() => {
-          // If it's a GET request, we might have cached the response
           if (event.request.method === 'GET') {
             return caches.match(event.request);
           }
-
-          // For other methods (POST, PUT), we can't really handle them offline
-          // Just return a simple JSON indicating we're offline
           return new Response(
             JSON.stringify({
               error: 'You are currently offline',
@@ -69,14 +62,12 @@ self.addEventListener('fetch', event => {
           );
         }),
     );
-  // For JavaScript, CSS, and HTML files, use network-first approach
   } else if (event.request.url.endsWith('.js') ||
            event.request.url.endsWith('.css') ||
            event.request.url.endsWith('.html')) {
     event.respondWith(
       fetch(event.request)
         .then(response => {
-          // Update the cache with the new version
           const responseToCache = response.clone();
           caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, responseToCache);
@@ -84,18 +75,15 @@ self.addEventListener('fetch', event => {
           return response;
         })
         .catch(() => {
-          // Fall back to cache if offline
           return caches.match(event.request);
         }),
     );
-  // For other resources, use cache-first strategy
   } else {
     event.respondWith(
       caches.match(event.request)
         .then(response => {
           return response || fetch(event.request)
             .then(fetchResponse => {
-              // Cache other resources too
               const responseToCache = fetchResponse.clone();
               caches.open(CACHE_NAME).then(cache => {
                 cache.put(event.request, responseToCache);

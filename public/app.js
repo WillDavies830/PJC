@@ -146,7 +146,7 @@ class RaceControlApp {
     this.currentScreen = screenId;
 
     if (screenId === 'race-control-screen') {
-      this.raceTimer.updateDisplay();
+      this.raceTimer.updateTimer();
       this.refreshElementReferences();
     }
   }

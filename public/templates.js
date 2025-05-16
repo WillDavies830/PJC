@@ -4,6 +4,7 @@ const Templates = {
     return '<p>No races found</p>';
   },
 
+  // Template for admin races view
   raceCard: function (race, isAdmin) {
     return `
       <h3>${race.name}</h3>

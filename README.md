@@ -32,7 +32,7 @@ In my main application app.js on line 400 you will find my recordFinish() method
 
 
 ### Uploading results to the server.
-In my main application app.js on line 508 you will find my uploadResults() method which again does checks first to see if the user is online before using POST to upload the results to the server, along with making sure there are results stored locally to upload. After uploading results successfully the 
+In my main application app.js on line 508 you will find my uploadResults() method which again does checks first to see if the user is online before using POST to upload the results to the server, along with making sure there are results stored locally to upload. After uploading results successfully this method disables the upload and clear results buttons to not confuse the user.
 
 
 ### Viewing available races.
@@ -49,16 +49,18 @@ In my main application app.js on line 262 you will find my deleteRace() method w
 
 ### Exporting race results to a csv file.
 In my main application app.js on line 559 you will find my exportRaceResults() method which first downloads race and result data from the server, then formats this data into a CSV string. It creates a downloadable link element with the CSV data and automatically triggers the download for the user. The CSV includes position, bib number, and race time for each runner, sorted by finish time.
+This feature is not needed for complete functionality but is a quality of life feature. Having the ability to download the results of a race after it is finished means the runners can store the results permenantly on their device for future reference,
 
 
 ### Admin and Runner roles.
-Throughout my application you will find role-based access control implemented in methods like initRoleBasedAccess() on line 98, isAdmin() on line 145, and showScreen() on line 150. The application allows users to switch between admin and runner roles, with the chosen role stored in localStorage. Depending on the role, certain UI elements (like the Create Race button) and functionality (like starting/ending races) are enabled or disabled. The app visually indicates the current role through CSS classes.
+Throughout my application you will find role-based access control implemented in methods like initRoleBasedAccess() on line 98, isAdmin() on line 145, and showScreen() on line 150. The application allows users to switch between admin and runner roles, with the chosen role stored in localStorage. Admin users have full functionality of the application whereas the runner role can only see view races along with just the view results and export buttons on this page. I use CSS to indicate to the user which role is active.
+I thought this was a key feature in my application as race runners should only have basic access, they do not need to be able to create and delete races along with any control over the race timer.
 
 
 
 
 ## AI
-Replace this with DETAIL about your use of AI, listing of the prompts you used, and whether the results formed or inspired part of your final submission and where we can see this (and if not, why not?). You may wish to group prompts into headings/sections - use markdown in any way that it helps you communicate your use of AI.  Tell us about what went right,  what went horribly wrong and what you learned from it.
+
 
 ### Prompts to develop XYZ (example)
 A sequence of prompts helped me develop this feature:

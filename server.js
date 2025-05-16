@@ -6,14 +6,10 @@ import { fileURLToPath } from 'url';
 const app = express();
 const PORT = 8080;
 
-// Get current filename and directory name
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Open database connection
 const db = new sqlite3.Database(path.join(__dirname, 'db', 'race-time.db'));
 
-// Middleware to parse JSON and serve static files
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -49,7 +45,7 @@ app.post('/api/races', (req, res) => {
 // Route to update race start time
 app.put('/api/races/:id/start', (req, res) => {
   const raceId = req.params.id;
-  const startTime = Date.now(); // Current timestamp
+  const startTime = Date.now();
 
   db.run(
     'UPDATE races SET startTime = ?, status = ? WHERE id = ?',
@@ -93,17 +89,12 @@ app.post('/api/races/:id/results', (req, res) => {
   if (!results || !Array.isArray(results)) {
     return res.status(400).json({ error: 'Results array is required' });
   }
-
-  // First check for existing runner numbers
   db.all('SELECT runnerNumber FROM results WHERE raceId = ?', [raceId], (err, existingResults) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
 
-    // Create a set of existing runner numbers for efficient lookup
     const existingRunnerNumbers = new Set(existingResults.map(r => r.runnerNumber));
-
-    // Check for duplicates in the request
     const requestRunnerNumbers = new Set();
     const duplicates = [];
 
@@ -124,15 +115,13 @@ app.post('/api/races/:id/results', (req, res) => {
       });
     }
 
-    // If no duplicates, proceed with inserting the results
-    // Begin transaction
+    // insert the results
     db.serialize(() => {
       db.run('BEGIN TRANSACTION');
 
       let hasError = false;
       const uploadedAt = Date.now();
 
-      // Insert each result
       results.forEach(result => {
         if (hasError) return;
 
@@ -184,7 +173,6 @@ app.get('/api/races/:id/results', (req, res) => {
         return res.status(500).json({ error: err.message });
       }
 
-      // Process results to include race time
       const processedResults = rows.map(row => {
         return {
           id: row.id,
@@ -201,7 +189,7 @@ app.get('/api/races/:id/results', (req, res) => {
   );
 });
 
-// Route to get race details including start time
+// Route to get race details
 app.get('/api/races/:id', (req, res) => {
   const raceId = req.params.id;
 
@@ -216,33 +204,26 @@ app.get('/api/races/:id', (req, res) => {
   });
 });
 
-// Add this new route to server.js before the catch-all route
 // Route to delete a race
 app.delete('/api/races/:id', (req, res) => {
   const raceId = req.params.id;
 
   db.serialize(() => {
     db.run('BEGIN TRANSACTION');
-
-    // First delete all results associated with the race
     db.run('DELETE FROM results WHERE raceId = ?', [raceId], function (err) {
       if (err) {
         db.run('ROLLBACK');
         return res.status(500).json({ error: err.message });
       }
-
-      // Then delete the race itself
       db.run('DELETE FROM races WHERE id = ?', [raceId], function (err) {
         if (err) {
           db.run('ROLLBACK');
           return res.status(500).json({ error: err.message });
         }
-
         if (this.changes === 0) {
           db.run('ROLLBACK');
           return res.status(404).json({ error: 'Race not found' });
         }
-
         db.run('COMMIT', err => {
           if (err) {
             return res.status(500).json({ error: err.message });
@@ -264,7 +245,7 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// Handle server shutdown
+// server shutdown
 process.on('SIGINT', () => {
   db.close();
   process.exit(0);

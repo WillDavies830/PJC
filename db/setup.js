@@ -17,7 +17,6 @@ if (!fs.existsSync(dbDir)) {
 const db = new sqlite3.Database(path.join(dbDir, 'race-time.db'));
 
 db.serialize(() => {
-  // Create tables
   db.run(`
     CREATE TABLE IF NOT EXISTS races (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
