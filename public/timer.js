@@ -86,7 +86,7 @@ class RaceTimer {
     return result.trim();
   }
 
-  // pads number with leading zeros for readability
+  // pads number for readability
   padZero(num, width = 2) {
     return num.toString().padStart(width, '0');
   }

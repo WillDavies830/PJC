@@ -1,6 +1,3 @@
-evaluation
---cant edit results 
-
 # Race Time - by up2245678
 ## Key features
 The key features of my application include:
@@ -62,6 +59,7 @@ Overall my application is fully functional and could be deployed although there 
 
 #Code
 Thoughout my code I have tried to use function names that are readable and explain what happens inside that function, where functions are less obvious i have included brief comments at the top of the function to give future developers an idea of the purpose of the function. However this may not be fool proof as details have been left out due to my personal oversights. This is because I understand my code better then someone who might try to read my code.
+My template.js file is not optimal as although it brings html out of my other js files and centralises it so that other files can call it and use the templates it is still not perfect as it reduces the maintainability of the code. html in js files is not good for sustainability. To amend this I would create seperate html files for different js files such as a timer.html file to consolidate all the timer html in one file. This would make the code more maintainable and easier for future developers to work on.
 
 
 ## AI

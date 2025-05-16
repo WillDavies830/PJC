@@ -155,8 +155,6 @@ class OfflineStorage {
     }
   }
 }
-
-// Initialize offline storage
 window.offlineStorage = new OfflineStorage();
 
 // Register service worker for offline capabilities
@@ -171,6 +169,4 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
-
-// Export showNotification for use in other modules
 window.showNotification = showNotification;
