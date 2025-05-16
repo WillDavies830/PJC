@@ -20,44 +20,44 @@ class RaceControlApp {
     
     // Cache DOM elements
     this.screens = {
-      home: document.getElementById('home-screen'),
-      createRace: document.getElementById('create-race-screen'),
-      racesList: document.getElementById('races-list-screen'),
-      raceControl: document.getElementById('race-control-screen'),
-      results: document.getElementById('results-screen')
+      home: document.querySelector('#home-screen'),
+      createRace: document.querySelector('#create-race-screen'),
+      racesList: document.querySelector('#races-list-screen'),
+      raceControl: document.querySelector('#race-control-screen'),
+      results: document.querySelector('#results-screen')
     };
     
     // Button elements
     this.buttons = {
-      createRace: document.getElementById('create-race-button'),
-      viewRaces: document.getElementById('view-races-button'),
-      cancelCreate: document.getElementById('cancel-create'),
-      backToHome: document.getElementById('back-to-home'),
-      startTimer: document.getElementById('start-timer-button'),
-      recordFinish: document.getElementById('record-button'), // This might be removed from HTML
-      endRace: document.getElementById('end-race-button'),
-      uploadResults: document.getElementById('upload-results-button'),
-      clearResults: document.getElementById('clear-results-button'),
-      backToRaces: document.getElementById('back-to-races'),
-      backFromResults: document.getElementById('back-from-results'),
-      syncNow: document.getElementById('sync-now-button')
+      createRace: document.querySelector('#create-race-button'),
+      viewRaces: document.querySelector('#view-races-button'),
+      cancelCreate: document.querySelector('#cancel-create'),
+      backToHome: document.querySelector('#back-to-home'),
+      startTimer: document.querySelector('#start-timer-button'),
+      recordFinish: document.querySelector('#record-button'), // This might be removed from HTML
+      endRace: document.querySelector('#end-race-button'),
+      uploadResults: document.querySelector('#upload-results-button'),
+      clearResults: document.querySelector('#clear-results-button'),
+      backToRaces: document.querySelector('#back-to-races'),
+      backFromResults: document.querySelector('#back-from-results'),
+      syncNow: document.querySelector('#sync-now-button')
     };
     
     // Forms
     this.forms = {
-      createRace: document.getElementById('create-race-form'),
-      recordFinish: document.getElementById('record-finish-form')
+      createRace: document.querySelector('#create-race-form'),
+      recordFinish: document.querySelector('#record-finish-form')
     };
     
     // Other elements
     this.elements = {
-      racesContainer: document.getElementById('races-container'),
-      raceNameDisplay: document.getElementById('race-name-display'),
-      resultsRaceName: document.getElementById('results-race-name'),
-      resultsList: document.getElementById('results-list'),
-      resultsTableContainer: document.getElementById('results-table-container'),
-      runnerInput: document.getElementById('runner-input'),
-      runnerNumber: document.getElementById('runner-number')
+      racesContainer: document.querySelector('#races-container'),
+      raceNameDisplay: document.querySelector('#race-name-display'),
+      resultsRaceName: document.querySelector('#results-race-name'),
+      resultsList: document.querySelector('#results-list'),
+      resultsTableContainer: document.querySelector('#results-table-container'),
+      runnerInput: document.querySelector('#runner-input'),
+      runnerNumber: document.querySelector('#runner-number')
     };
   }
   
@@ -117,11 +117,11 @@ class RaceControlApp {
    */
   refreshElementReferences() {
     // Update runner input references
-    this.elements.runnerInput = document.getElementById('runner-input');
-    this.elements.runnerNumber = document.getElementById('runner-number');
+    this.elements.runnerInput = document.querySelector('#runner-input');
+    this.elements.runnerNumber = document.querySelector('#runner-number');
     
     // Update form references that might be dynamic
-    this.forms.recordFinish = document.getElementById('record-finish-form');
+    this.forms.recordFinish = document.querySelector('#record-finish-form');
   }
 
   /**
@@ -129,7 +129,7 @@ class RaceControlApp {
    */
   initRoleBasedAccess() {
     // Get the role selector element
-    const roleSelector = document.getElementById('user-role');
+    const roleSelector = document.querySelector('#user-role');
     
     if (roleSelector) {
       // Set the initial value based on saved preference
@@ -199,7 +199,7 @@ class RaceControlApp {
       screen.classList.remove('active');
     });
     
-    document.getElementById(screenId).classList.add('active');
+    document.querySelector(`#${screenId}`).classList.add('active');
     this.currentScreen = screenId;
     
     // Special handling for screens
@@ -221,8 +221,8 @@ class RaceControlApp {
       return;
     }
     
-    const nameInput = document.getElementById('race-name');
-    const dateInput = document.getElementById('race-date');
+    const nameInput = document.querySelector('#race-name');
+    const dateInput = document.querySelector('#race-date');
     
     const name = nameInput.value.trim();
     const date = dateInput.value;

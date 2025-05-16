@@ -5,8 +5,8 @@
 class OfflineStorage {
   constructor() {
     this.storageKey = 'race-control-data';
-    this.connectionStatusElement = document.getElementById('connection-status');
-    this.syncStatusElement = document.getElementById('sync-status');
+    this.connectionStatusElement = document.querySelector('#connection-status');
+    this.syncStatusElement = document.querySelector('#sync-status');
     
     // Generate a unique device ID if not already present
     this.deviceId = localStorage.getItem('device-id');
@@ -205,7 +205,7 @@ class OfflineStorage {
  * @param {number} duration - How long to show the notification in milliseconds
  */
 function showNotification(message, duration = 3000) {
-  const notification = document.getElementById('notification');
+  const notification = document.querySelector('#notification');
   if (!notification) return;
   
   notification.textContent = message;
