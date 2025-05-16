@@ -9,7 +9,7 @@ if (!fs.existsSync(dbDir)) {
 }
 
 // Create and setup database
-const db = new sqlite3.Database(path.join(dbDir, 'race-control.db'));
+const db = new sqlite3.Database(path.join(dbDir, 'race-time.db'));
 
 db.serialize(() => {
   // Create tables

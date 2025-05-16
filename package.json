@@ -1,7 +1,7 @@
 {
-    "name": "race-control",
+    "name": "race-time",
     "version": "1.0.0",
-    "description": "A web-based race timing solution for Portsmouth Joggers' Club",
+    "description": "PJC race timer",
     "main": "server.js",
     "scripts": {
       "start": "node server.js",

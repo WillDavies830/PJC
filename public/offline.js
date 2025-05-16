@@ -1,13 +1,9 @@
-/**
- * Offline Storage Manager
- * Handles local storage of race data when offline
- */
 class OfflineStorage {
   constructor() {
     this.storageKey = 'race-control-data';
     this.connectionStatusElement = document.querySelector('#connection-status');
     this.syncStatusElement = document.querySelector('#sync-status');
-    
+
     // Generate a unique device ID if not already present
     this.deviceId = localStorage.getItem('device-id');
     if (!this.deviceId) {

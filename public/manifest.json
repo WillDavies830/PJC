@@ -1,6 +1,6 @@
 {
-    "name": "Race Control",
-    "short_name": "RaceControl",
+    "name": "Race Time",
+    "short_name": "RaceTime",
     "description": "Portsmouth Joggers' Club race timing solution",
     "start_url": "/",
     "display": "standalone",

@@ -10,7 +10,7 @@ const Templates = {
       <p>Status: ${race.status === 'pending' ? 'Not Started' : 
                 race.status === 'active' ? 'In Progress' : 'Completed'}</p>
       <div class="race-card-buttons">
-        ${isAdmin ? '<button class="primary-button control-button">Control Race</button>' : ''}
+        ${isAdmin ? '<button class="primary-button control-button">Race Timer</button>' : ''}
         <button class="secondary-button results-button">View Results</button>
         <button class="export-button export-csv-button">Export CSV</button>
         ${isAdmin ? '<button class="danger-button delete-button">Delete Race</button>' : ''}

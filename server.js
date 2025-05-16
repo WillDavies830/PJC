@@ -5,7 +5,7 @@ const app = express();
 const PORT = 8080;
 
 // Open database connection
-const db = new sqlite3.Database(path.join(__dirname, 'db', 'race-control.db'));
+const db = new sqlite3.Database(path.join(__dirname, 'db', 'race-time.db'));
 
 // Middleware to parse JSON and serve static files
 app.use(express.json());
