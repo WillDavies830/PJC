@@ -1,3 +1,17 @@
+/* global window, Templates */
+// Function to display notifications
+function showNotification(message, duration = 3000) {
+  const notification = document.querySelector('#notification');
+  if (!notification) return;
+
+  notification.textContent = message;
+  notification.classList.remove('hidden');
+
+  setTimeout(() => {
+    notification.classList.add('hidden');
+  }, duration);
+}
+
 class OfflineStorage {
   constructor() {
     this.storageKey = 'race-control-data';
@@ -198,18 +212,6 @@ class OfflineStorage {
   }
 }
 
-function showNotification(message, duration = 3000) {
-  const notification = document.querySelector('#notification');
-  if (!notification) return;
-
-  notification.textContent = message; // Changed to textContent
-  notification.classList.remove('hidden');
-
-  setTimeout(() => {
-    notification.classList.add('hidden');
-  }, duration);
-}
-
 // Initialize offline storage
 window.offlineStorage = new OfflineStorage();
 
@@ -225,3 +227,6 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+// Export showNotification for use in other modules
+window.showNotification = showNotification;

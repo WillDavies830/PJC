@@ -69,9 +69,8 @@ self.addEventListener('fetch', event => {
           );
         }),
     );
-  }
   // For JavaScript, CSS, and HTML files, use network-first approach
-  else if (event.request.url.endsWith('.js') ||
+  } else if (event.request.url.endsWith('.js') ||
            event.request.url.endsWith('.css') ||
            event.request.url.endsWith('.html')) {
     event.respondWith(
@@ -89,9 +88,8 @@ self.addEventListener('fetch', event => {
           return caches.match(event.request);
         }),
     );
-  }
   // For other resources, use cache-first strategy
-  else {
+  } else {
     event.respondWith(
       caches.match(event.request)
         .then(response => {

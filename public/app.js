@@ -1,3 +1,4 @@
+/* global Templates, RaceTimer, showNotification */
 
 document.addEventListener('DOMContentLoaded', () => {
   const app = new RaceControlApp();
@@ -212,10 +213,6 @@ class RaceControlApp {
         races.forEach(race => {
           const raceCard = document.createElement('div');
           raceCard.className = 'race-card';
-          const status = race.status === 'pending'
-            ? 'Not Started'
-            : race.status === 'active' ? 'In Progress' : 'Completed';
-          const date = new Date(race.date).toLocaleDateString();
           const isAdmin = this.isAdmin();
           raceCard.innerHTML = Templates.raceCard(race, isAdmin);
           if (isAdmin) {
@@ -317,7 +314,7 @@ class RaceControlApp {
           this.elements.runnerNumber.focus();
         }
         if (race.startTime) {
-          this.raceTimer.start(parseInt(race.startTime));
+          this.raceTimer.start(parseInt(race.startTime, 10));
         }
       } else {
         if (this.buttons.startTimer) this.buttons.startTimer.disabled = true;
@@ -329,7 +326,7 @@ class RaceControlApp {
           this.elements.runnerNumber.disabled = true;
         }
         if (race.startTime) {
-          this.raceTimer.start(parseInt(race.startTime));
+          this.raceTimer.start(parseInt(race.startTime, 10));
           this.raceTimer.stop();
         }
       }
@@ -402,7 +399,7 @@ class RaceControlApp {
       showNotification('Bib number input not available', 3000);
       return;
     }
-    const bibNumber = parseInt(this.elements.runnerNumber.value);
+    const bibNumber = parseInt(this.elements.runnerNumber.value, 10);
     if (isNaN(bibNumber) || bibNumber <= 0) {
       showNotification('Invalid bib number', 3000);
       return;
