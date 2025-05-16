@@ -56,7 +56,12 @@ This feature is not needed for complete functionality but is a quality of life f
 Throughout my application you will find role-based access control implemented in methods like initRoleBasedAccess() on line 98, isAdmin() on line 145, and showScreen() on line 150. The application allows users to switch between admin and runner roles, with the chosen role stored in localStorage. Admin users have full functionality of the application whereas the runner role can only see view races along with just the view results and export buttons on this page. I use CSS to indicate to the user which role is active.
 I thought this was a key feature in my application as race runners should only have basic access, they do not need to be able to create and delete races along with any control over the race timer.
 
+### Evaluation
+#App functionality
+Overall my application is fully functional and could be deployed although there are certain things that I would ideally want to change. Firstly the admins cannot edit a runners result time. With the potenial for bad weather conditions admins may make data entry errors which could cause problems as if the wrong time was recorded there is no way of amending such an error. Furthermore the role system has a huge flaw in that its based on user trust, due to no logins anyone that has access to the application can select either an admin or runner role. Although this is out of the scope of the spec, this is something that would have to be addressed to improve security. Additionally a marshall role would have been a good implementation to make to section out the role system further, however since my application does not utilise checkpoints and uses a simple race template of a single start and finish time i decided not to implement this.
 
+#Code
+Thoughout my code I have tried to use function names that are readable and explain what happens inside that function, where functions are less obvious i have included brief comments at the top of the function to give future developers an idea of the purpose of the function. However this may not be fool proof as details have been left out due to my personal oversights. This is because I understand my code better then someone who might try to read my code.
 
 
 ## AI
