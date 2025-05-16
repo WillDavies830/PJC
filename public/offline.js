@@ -78,7 +78,10 @@ class OfflineStorage {
     
     if (this.syncStatusElement) {
       if (hasUnsyncedData && this.isOnline) {
+        this.syncStatusElement.innerHTML = Templates.syncStatus(hasUnsyncedData, this.isOnline);
         this.syncStatusElement.classList.remove('hidden');
+        
+        // The global event delegation will handle this button's clicks
       } else {
         this.syncStatusElement.classList.add('hidden');
       }
@@ -199,16 +202,11 @@ class OfflineStorage {
   }
 }
 
-/**
- * Show a notification to the user
- * @param {string} message - The message to display
- * @param {number} duration - How long to show the notification in milliseconds
- */
 function showNotification(message, duration = 3000) {
   const notification = document.querySelector('#notification');
   if (!notification) return;
   
-  notification.textContent = message;
+  notification.textContent = message; // Changed to textContent
   notification.classList.remove('hidden');
   
   setTimeout(() => {

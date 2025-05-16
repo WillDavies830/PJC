@@ -289,34 +289,20 @@ class RaceControlApp {
       this.elements.racesContainer.innerHTML = '';
       
       if (races.length === 0) {
-        this.elements.racesContainer.innerHTML = '<p>No races found</p>';
+        // REPLACE WITH TEMPLATE
+        this.elements.racesContainer.innerHTML = Templates.noRaces();
       } else {
         // Add each race to the container
         races.forEach(race => {
           const raceCard = document.createElement('div');
           raceCard.className = 'race-card';
-          
           const status = race.status === 'pending' ? 'Not Started' : 
                         race.status === 'active' ? 'In Progress' : 'Completed';
-          
           const date = new Date(race.date).toLocaleDateString();
-          
-          // Determine which buttons to show based on user role
           const isAdmin = this.isAdmin();
+          raceCard.innerHTML = Templates.raceCard(race, isAdmin);
           
-          raceCard.innerHTML = `
-            <h3>${race.name}</h3>
-            <p>Date: ${date}</p>
-            <p>Status: ${status}</p>
-            <div class="race-card-buttons">
-              ${isAdmin ? '<button class="primary-button control-button">Control Race</button>' : ''}
-              <button class="secondary-button results-button">View Results</button>
-              <button class="export-button export-csv-button">Export CSV</button>
-              ${isAdmin ? '<button class="danger-button delete-button">Delete Race</button>' : ''}
-            </div>
-          `;
-          
-          // Add event listeners only for buttons that exist
+          // Add event listeners only for buttons that exist (KEEP ALL OF THIS)
           if (isAdmin) {
             raceCard.querySelector('.control-button').addEventListener('click', () => {
               this.loadRaceControl(race.id);
@@ -662,11 +648,12 @@ class RaceControlApp {
     this.elements.resultsList.innerHTML = '';
     
     if (this.results.length === 0) {
-      this.elements.resultsList.innerHTML = '<p>No results recorded yet</p>';
+      // REPLACE WITH TEMPLATE
+      this.elements.resultsList.innerHTML = Templates.noResults();
       return;
     }
     
-    // Sort results by finish time (ascending)
+    // Sort results by finish time (ascending) - KEEP THIS
     const sortedResults = [...this.results].sort((a, b) => a.finishTime - b.finishTime);
     
     // Add each result to the list
@@ -675,12 +662,13 @@ class RaceControlApp {
       resultItem.className = 'result-item';
       
       const position = index + 1;
-      const raceTimeFormatted = this.raceTimer.formatTimeVerbose(result.raceTime);
       
-      resultItem.innerHTML = `
-        <div><strong>#${position}</strong> Runner ${result.runnerNumber}</div>
-        <div>${raceTimeFormatted}</div>
-      `;
+      // REPLACE WITH TEMPLATE
+      resultItem.innerHTML = Templates.resultItem(
+        result, 
+        position, 
+        this.raceTimer.formatTimeVerbose.bind(this.raceTimer)
+      );
       
       this.elements.resultsList.appendChild(resultItem);
     });
@@ -968,49 +956,14 @@ class RaceControlApp {
       
       // Clear the results container
       if (this.elements.resultsTableContainer) {
-        this.elements.resultsTableContainer.innerHTML = '';
+        // Sort results by race time (ascending)
+        const sortedResults = [...results].sort((a, b) => a.raceTime - b.raceTime);
         
-        if (results.length === 0) {
-          this.elements.resultsTableContainer.innerHTML = '<p>No results available for this race</p>';
-        } else {
-          // Sort results by race time (ascending)
-          const sortedResults = [...results].sort((a, b) => a.raceTime - b.raceTime);
-          
-          // Create the results table
-          const table = document.createElement('table');
-          table.innerHTML = `
-            <thead>
-              <tr>
-                <th>Position</th>
-                <th>Runner</th>
-                <th>Race Time</th>
-                <th>Finish Time</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          `;
-          
-          const tbody = table.querySelector('tbody');
-          
-          // Add each result to the table
-          sortedResults.forEach((result, index) => {
-            const position = index + 1;
-            const raceTimeFormatted = this.formatTimeDisplay(result.raceTime);
-            const finishTimeFormatted = new Date(result.finishTime).toLocaleTimeString();
-            
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${position}</td>
-              <td>${result.runnerNumber}</td>
-              <td>${raceTimeFormatted}</td>
-              <td>${finishTimeFormatted}</td>
-            `;
-            
-            tbody.appendChild(row);
-          });
-          
-          this.elements.resultsTableContainer.appendChild(table);
-        }
+        // REPLACE WITH TEMPLATE
+        this.elements.resultsTableContainer.innerHTML = Templates.resultsTable(
+          sortedResults, 
+          this.formatTimeDisplay.bind(this)
+        );
       }
       
       // Show the results screen
