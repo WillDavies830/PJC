@@ -51,7 +51,6 @@ main {
   padding: var(--spacing);
 }
 
-/* Screen Transitions */
 .screen {
   display: none;
   animation: fadeIn 0.3s ease-in-out;
@@ -61,7 +60,6 @@ main {
   display: block;
 }
 
-/* Button Styles */
 .button-container {
   display: flex;
   flex-direction: column;
@@ -139,7 +137,6 @@ button:not(:disabled):hover {
   background-color: var(--export-hover-color);
 }
 
-/* Form Elements */
 .form-group {
   margin-bottom: 15px;
 }
@@ -169,7 +166,6 @@ input:disabled {
   cursor: not-allowed;
 }
 
-/* Status Indicators */
 #connection-status {
   position: absolute;
   top: 10px;
@@ -199,7 +195,6 @@ input:disabled {
   text-align: center;
 }
 
-/* Timer Elements */
 #timer-display {
   font-size: 48px;
   font-weight: bold;
@@ -216,7 +211,6 @@ input:disabled {
   flex-wrap: wrap;
 }
 
-/* Race Cards */
 .race-card {
   background-color: var(--card-color);
   border-radius: var(--border-radius);
@@ -243,7 +237,6 @@ input:disabled {
   margin-bottom: 8px;
 }
 
-/* Results Display */
 #results-list {
   max-height: 300px;
   overflow-y: auto;
@@ -276,7 +269,6 @@ input:disabled {
   box-shadow: var(--box-shadow);
 }
 
-/* Notification */
 .notification {
   position: fixed;
   bottom: 20px;
@@ -299,7 +291,6 @@ input:disabled {
   display: none;
 }
 
-/* Table Styles */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -330,7 +321,6 @@ tr:nth-child(even) {
   background-color: rgba(0, 0, 0, 0.02);
 }
 
-/* Role Selector */
 .role-selector {
   position: absolute;
   top: 10px;
@@ -359,13 +349,11 @@ tr:nth-child(even) {
   cursor: pointer;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* Accessibility and Responsive Design */
 @media (prefers-reduced-motion) {
   .screen {
     animation: none;
@@ -401,14 +389,10 @@ tr:nth-child(even) {
   }
 }
 
-/* Add these CSS rules to your style.css file */
-
-/* Make semantic elements behave like divs where needed */
 section, article, nav, aside, time {
   display: block;
 }
 
-/* Ensure the timer display works with time element */
 #timer-display, 
 time#timer-display {
   font-size: 48px;
@@ -419,14 +403,12 @@ time#timer-display {
   display: block;
 }
 
-/* Ensure fieldsets in forms look like the original div.form-group */
 fieldset.form-group {
   margin-bottom: 15px;
   border: none;
   padding: 0;
 }
 
-/* Support for article elements in results list */
 article#results-list {
   max-height: 300px;
   overflow-y: auto;
@@ -436,7 +418,6 @@ article#results-list {
   padding: 10px;
 }
 
-/* Support for section elements in race cards and other containers */
 section#races-container article.race-card {
   background-color: var(--card-color);
   border-radius: var(--border-radius);
@@ -445,7 +426,6 @@ section#races-container article.race-card {
   box-shadow: var(--box-shadow);
 }
 
-/* Adjust the aside for role selector */
 aside.role-selector {
   position: absolute;
   top: 10px;
@@ -458,7 +438,6 @@ aside.role-selector {
   z-index: 100;
 }
 
-/* Support for nav element as button container */
 nav.button-container {
   display: flex;
   flex-direction: column;
@@ -466,7 +445,6 @@ nav.button-container {
   margin: 20px 0;
 }
 
-/* Adjust notification aside */
 aside#notification {
   position: fixed;
   bottom: 20px;
@@ -480,7 +458,6 @@ aside#notification {
   transition: opacity 0.3s;
 }
 
-/* Support for section as runner input */
 section#runner-input {
   margin: 20px 0;
   padding: 15px;
@@ -489,7 +466,6 @@ section#runner-input {
   box-shadow: var(--box-shadow);
 }
 
-/* Ensure section for recorded results looks good */
 section#recorded-results h3 {
   margin-top: 20px;
 }

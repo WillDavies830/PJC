@@ -1,27 +1,48 @@
+evaluation
+--cant edit results 
+
 # Race Time - by up2245678
 ## Key features
 The key features of my application include:
-Creating races
-Starting a race
-Recording a finish time for a specific bib number
+Creating races.
+Starting and ending a race.
+Recording finish times.
+Uploading results to the server.
+Viewing available races.
+Viewing race results.
+Deleting a race.
+Exporting race results to a csv file.
+Admin and Runner roles.
+
+
+### Creating a race.
+In my main application app.js on line 153 you will find my CreateRace() method which first checks if the user has the admin role, if so it takes two inputs, race name and race date
+which are required fields to create a race. This method has basic error checking to make sure the user has inputted values into both fields along with checking that the user is online
+before making an API call to the server. If this criteria is met the race data is sent to the server via fetch().
+This is a core feature of my application as it is necessary that users can create multiple races, the error handling i included is important as a failed API request could crash my application. 
+
+
+### Starting and ending a race.
+In my main application app.js on line 350 and 475 you will find my startRace() and endRace() functions. The user cannot start a race when offline as this would be overly complex so there is a check in place. However a user can end a race when offline, the timer is stopped only locally and the PUT request to the server is done once the user is back online. In both methods I use if() statements to disable and enable buttons for better usability and to prevent unwanted errors.
+This is another core feature of my application as it is necessary for users to be able to start and end races on a timer app!
+
+
+### Recording finish times.
+In my main application app.js on line 400 you will find my recordFinish() method which is formatted in the same way as all my other methods by first doing checks such as, checking if the timer is running along with making sure the user does not enter the same bib number twice and rejecting invalid entries. If the checks are passed the result is stored locally in the local results array. I made sure to store the results in the offline storage so that if the user goes offline the data isn't lost.
+
+
+### Uploading results to the server.
+In my main application app.js on line 508 you will find my uploadResults() method which again does checks first to see if the user is online before using POST to upload the results to the server, along with making sure there are results stored locally to upload. After uploading results successfully the 
 
 
 
 
-### Key Feature Name/Description.
-Tell us briefly how to find & use it.
-Describe the thinking behind the design of this feature.  
 
 
-### Key Another Feature Name/Description.
-Tell us briefly how to find & use it.
-Describe the thinking behind the design of this feature.  
 
-.
-.
-.
-### Final Key Feature Name/Description.
-Same for each feature… you get the idea
+
+
+
 
 
 ## AI

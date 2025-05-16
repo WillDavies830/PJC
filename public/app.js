@@ -348,10 +348,6 @@ class RaceControlApp {
   }
   
   async startRace() {
-    if (!this.isAdmin()) {
-      showNotification('You do not have permission to start races', 3000);
-      return;
-    }
     if (!this.currentRaceId) {
       showNotification('No race selected', 3000);
       return;
@@ -398,14 +394,6 @@ class RaceControlApp {
   }
   
 recordFinish() {
-  if (!this.isAdmin()) {
-    showNotification('You do not have permission to record finishes', 3000);
-    return;
-  }
-  if (!this.currentRaceId) {
-    showNotification('No race selected', 3000);
-    return;
-  }
   if (!this.raceTimer.isRunning) {
     showNotification('Race timer not running', 3000);
     return;
@@ -473,10 +461,6 @@ recordFinish() {
   }
 
   async endRace() {
-    if (!this.isAdmin()) {
-      showNotification('You do not have permission to end races', 3000);
-      return;
-    }
     if (!this.currentRaceId) {
       showNotification('No race selected', 3000);
       return;
@@ -515,7 +499,6 @@ recordFinish() {
           this.uploadResults();
         }
       }
-      
     } catch (error) {
       console.error('End race error:', error);
       showNotification('Failed to end race', 3000);
@@ -523,14 +506,6 @@ recordFinish() {
   }
 
   async uploadResults() {
-    if (!this.isAdmin()) {
-      showNotification('You do not have permission to upload results', 3000);
-      return;
-    }
-    if (!this.currentRaceId) {
-      showNotification('No race selected', 3000);
-      return;
-    }
     if (this.results.length === 0) {
       showNotification('No results to upload', 3000);
       return;
@@ -570,10 +545,6 @@ recordFinish() {
   }
   
   clearResults() {
-    if (!this.isAdmin()) {
-      showNotification('You do not have permission to clear results', 3000);
-      return;
-    }
     if (this.results.length === 0) {
       return;
     }
