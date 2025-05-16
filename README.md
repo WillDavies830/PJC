@@ -65,22 +65,30 @@ Thoughout my code I have tried to use function names that are readable and expla
 
 
 ## AI
+I used AI in helping me to learn certain intricate details about certain parts of my code that were not working properly and I couldn't find  on DevDocs and other sources online. Overall I think AI is a great tool when used to build on knowledge and to help you debug areas of your code that you have issues with. I have detailed below the major prompts I used to help me learn and fix sections of code that were causing me issues. This does not include every single prompt I used, certain prompts I used were for very minor details and I felt like they were unnecessary to list below. 
+
+### Prompt to develop Cache versioning in sw.js
+Prompt that helped me develop this feature:
+
+"How do I implement cache versioning in a service-worker.js file to ensure updates are properly applied"
+I was initially having a problem where my cache was being taken from an old version not the latest version which meant whenever I loaded up the page I had to do a hard refresh to recently updated features visable. This prompt gave me the basis to cache assets properly in my sw.js file, with this prompt I learnt correct syntax to use, and code layout and structure that i used to fix my version control issue by incrementing the version whenever I made major code changes.
+
+### Prompt to assist me with developing my server side issues in server.js
+Prompt that helped me with adding multiple race results to my server
+
+"can you help me implement proper SQLite transactions with express for adding multiple race results"
+I was having a problem where my transactional handling on the server side meant that results weren't submitting properly, this prompt helped me to realise I wasn't executing transactions correctly with good error checking. After reviewing some of the examples I was given from this prompt I was able to apply what I learn to my own system with correct syntax and structure.
+
+### Prompt to assist me with developing my syncing issues in offline.js
+Prompt that helped me address this issue:
+
+"Can you help me with syncing locally stored race results when internet connection is back online"
+I was having an issue where my locally stored race results weren't syncing properly once internet connection was restored. The problem was sending the synced results back to the server. With this prompt I realised it was due to my offlineStorage class not being setup properly meaning that the results weren't being stored in offline storage. This prompt helped me with certain syntax and and code errors I had in this class. I was able to use some of the examples I was given to figure out where I was going wrong and fix my code.
+
+### Prompt to assist me with time formatting
+Prompt that helped assist me in this issue:
+
+"How can i use verbose for formatting time"
+I discovered verbose is useful for making more user friendly formatting of time, I used this prompt to help me write a function for this. Although this prompt didn't help me very much as although I have used verbose in my code I haven't implemented it correctly to get what I wanted out of it.
 
 
-### Prompts to develop XYZ (example)
-A sequence of prompts helped me develop this feature:
-
->  this is an example prompt given to a chatbot
-The response was proved useless because the prompt wasn't specific enough about XYZ, so:
-
->  this is an example prompt given to a chatbot detailing XYZ
-The response was better so I could specifically ask about QRST - this may evolve into a longer discussion highlighting some insight you gained… who knows where you might pick up marks!
-
->  how can I integrate QRST here?
-The suggestion worked with minor modifications.
-
-### Prompts to develop GHIJ (example)
-For the GHIJ feature I ...
-
->  this is an example prompt given to a chatbot
-words words words et
